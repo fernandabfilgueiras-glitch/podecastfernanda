@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DashSmart · Consumo Global de Álcool</title>
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+<style>
+:root{
+  --bg-0:#0a0710;
+  --bg-1:#120c1e;
+  --bg-2:#1a1230;
+  --card:rgba(30,20,52,0.55);
+  --card-solid:#1c1430;
+  --stroke:rgba(255,255,255,0.09);
+  --stroke-strong:rgba(255,255,255,0.18);
+  --txt:#f4eefb;
+  --txt-dim:#a99fc4;
+  --txt-faint:#6e6389;
+  --amber:#ffb01f;
+  --amber-2:#ff7a1a;
+  --gold:#ffd35c;
+  --beer:#ffb01f;
+  --spirit:#ff4d8d;
+  --wine:#b06bff;
+  --total:#2ee6c4;
+  --violet:#8b5cff;
+  --cyan:#28e0ff;
+  --pink:#ff5c9e;
+  --totalna:#3aa0ff;
+  --juice:#ffd35c;
+  --soda:#ff6f3c;
+  --water:#29d1ff;
+  --tea:#6fcf6f;
+  --shadow:0 18px 50px -12px rgba(0,0,0,0.7);
+  --font:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg-0);color:var(--txt);font-family:var(--font);overflow-x:hidden}
+body{
+  background:
+    radial-gradient(1200px 800px at 12% -8%,rgba(139,92,255,0.20),transparent 55%),
+    radial-gradient(1000px 700px at 95% 4%,rgba(255,122,26,0.16),transparent 50%),
+    radial-gradient(900px 900px at 55% 120%,rgba(46,230,196,0.12),transparent 55%),
+    var(--bg-0);
+  min-height:100vh;
+}
+/* animated background orbs */
+.orbs{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.45;mix-blend-mode:screen;animation:float 22s ease-in-out infinite}
+.orb.a{width:480px;height:480px;background:var(--violet);top:-120px;left:-80px}
+.orb.b{width:420px;height:420px;background:var(--amber-2);top:8%;right:-100px;animation-delay:-6s}
+.orb.c{width:520px;height:520px;background:var(--total);bottom:-180px;left:35%;animation-delay:-12s}
+@keyframes float{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,60px) scale(1.08)}66%{transform:translate(-30px,30px) scale(.95)}}
+
+.wrap{position:relative;z-index:1;max-width:1440px;margin:0 auto;padding:34px 30px 80px}
+
+/* ---------- Header ---------- */
+header{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:20px;margin-bottom:30px}
+.brand{display:flex;align-items:center;gap:16px;opacity:0;animation:riseIn .8s .05s forwards}
+.logo{
+  width:58px;height:58px;border-radius:17px;display:grid;place-items:center;font-size:30px;
+  background:linear-gradient(135deg,var(--amber),var(--amber-2));
+  box-shadow:0 10px 30px -6px rgba(255,122,26,.6);position:relative;overflow:hidden;
+}
+.logo::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%);transform:translateX(-120%);animation:shine 4.5s ease-in-out infinite}
+@keyframes shine{0%,60%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+.brand h1{font-size:31px;font-weight:800;letter-spacing:-.5px;line-height:1}
+.brand h1 span{background:linear-gradient(90deg,var(--gold),var(--amber-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand p{color:var(--txt-dim);font-size:13.5px;margin-top:6px;font-weight:500}
+.header-meta{text-align:right;color:var(--txt-faint);font-size:12.5px;line-height:1.7;opacity:0;animation:riseIn .8s .2s forwards}
+.header-meta b{color:var(--txt-dim);font-weight:600}
+
+/* ---------- KPI cards ---------- */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:26px}
+.kpi{
+  position:relative;background:var(--card);border:1px solid var(--stroke);border-radius:20px;padding:20px 22px;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:var(--shadow);overflow:hidden;
+  opacity:0;transform:translateY(18px);animation:riseIn .7s forwards;transition:transform .35s,border-color .35s}
+.kpi:hover{transform:translateY(-6px);border-color:var(--stroke-strong)}
+.kpi:nth-child(1){animation-delay:.15s}.kpi:nth-child(2){animation-delay:.25s}.kpi:nth-child(3){animation-delay:.35s}.kpi:nth-child(4){animation-delay:.45s}
+.kpi .ico{font-size:22px;margin-bottom:12px;display:inline-block}
+.kpi .val{font-size:33px;font-weight:800;letter-spacing:-1px;line-height:1}
+.kpi .lbl{color:var(--txt-dim);font-size:12.5px;margin-top:7px;font-weight:500}
+.kpi .sub{color:var(--txt-faint);font-size:11.5px;margin-top:3px}
+.kpi .bar{position:absolute;left:0;bottom:0;height:4px;width:100%;background:linear-gradient(90deg,var(--c1),var(--c2))}
+.kpi.k1{--c1:var(--beer);--c2:var(--amber-2)} .kpi.k1 .val{color:var(--gold)}
+.kpi.k2{--c1:var(--total);--c2:var(--cyan)} .kpi.k2 .val{color:var(--total)}
+.kpi.k3{--c1:var(--wine);--c2:var(--violet)} .kpi.k3 .val{color:var(--wine)}
+.kpi.k4{--c1:var(--spirit);--c2:var(--pink)} .kpi.k4 .val{color:var(--spirit)}
+
+/* ---------- Panels ---------- */
+.grid{display:grid;gap:22px}
+.panel{
+  background:var(--card);border:1px solid var(--stroke);border-radius:22px;padding:22px 24px;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:var(--shadow);
+  opacity:0;transform:translateY(22px);animation:riseIn .8s forwards}
+.panel .ptitle{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:700;margin-bottom:4px}
+.panel .ptitle .dot{width:9px;height:9px;border-radius:50%;box-shadow:0 0 12px currentColor}
+.panel .psub{color:var(--txt-dim);font-size:12.5px;margin-bottom:18px;font-weight:500}
+.row-2{grid-template-columns:1.35fr 1fr}
+.row-2b{grid-template-columns:1fr 1fr}
+@media(max-width:1080px){.row-2,.row-2b{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.kpis{grid-template-columns:1fr}}
+
+/* ---------- Controls ---------- */
+.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:16px}
+.seg{display:inline-flex;background:rgba(0,0,0,.28);border:1px solid var(--stroke);border-radius:13px;padding:4px;gap:2px}
+.seg button{
+  border:0;background:transparent;color:var(--txt-dim);font-family:var(--font);font-weight:600;font-size:12.5px;
+  padding:8px 15px;border-radius:10px;cursor:pointer;transition:.25s;display:flex;align-items:center;gap:7px;white-space:nowrap}
+.seg button .sw{width:9px;height:9px;border-radius:3px;transition:.25s}
+.seg button:hover{color:var(--txt)}
+.seg button.on{color:#1a1030;background:var(--acc,var(--amber));box-shadow:0 6px 16px -4px var(--acc,var(--amber))}
+.seg button.on .sw{background:rgba(0,0,0,.35)}
+.slider-wrap{display:flex;align-items:center;gap:11px;background:rgba(0,0,0,.28);border:1px solid var(--stroke);border-radius:13px;padding:8px 15px}
+.slider-wrap label{font-size:12px;color:var(--txt-dim);font-weight:600;white-space:nowrap}
+.slider-wrap output{font-size:12.5px;font-weight:700;color:var(--gold);min-width:30px;text-align:right}
+input[type=range]{-webkit-appearance:none;appearance:none;height:5px;width:150px;border-radius:5px;background:rgba(255,255,255,.14);outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;border-radius:50%;background:var(--gold);cursor:pointer;box-shadow:0 0 0 4px rgba(255,211,92,.2);transition:.2s}
+input[type=range]::-webkit-slider-thumb:hover{box-shadow:0 0 0 7px rgba(255,211,92,.28)}
+.search{background:rgba(0,0,0,.28);border:1px solid var(--stroke);border-radius:13px;padding:9px 15px;color:var(--txt);font-family:var(--font);font-size:12.5px;width:180px;transition:.25s}
+.search::placeholder{color:var(--txt-faint)}
+.search:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(255,211,92,.15)}
+
+/* ---------- Map ---------- */
+#map-panel{grid-column:1/-1}
+.map-shell{position:relative;width:100%}
+#map svg{width:100%;height:auto;display:block;cursor:grab}
+#map svg:active{cursor:grabbing}
+.country{stroke:rgba(10,7,16,.6);stroke-width:.4px;transition:fill .5s,opacity .3s,stroke .2s}
+.country:hover{stroke:#fff;stroke-width:1.1px;filter:brightness(1.18)}
+.country.dim{opacity:.12}
+.country.match{stroke:var(--cyan);stroke-width:1.6px;filter:drop-shadow(0 0 6px var(--cyan))}
+.tooltip{
+  position:fixed;pointer-events:none;z-index:50;opacity:0;transform:translateY(6px);transition:opacity .18s,transform .18s;
+  background:linear-gradient(180deg,rgba(28,20,48,.98),rgba(18,12,30,.98));border:1px solid var(--stroke-strong);
+  border-radius:15px;padding:14px 16px;min-width:220px;box-shadow:0 22px 50px -12px rgba(0,0,0,.85);backdrop-filter:blur(6px)}
+.tooltip.show{opacity:1;transform:translateY(0)}
+.tt-name{font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:2px}
+.tt-rank{font-size:10.5px;color:var(--txt-faint);background:rgba(255,255,255,.07);padding:2px 8px;border-radius:20px;font-weight:700}
+.tt-big{font-size:23px;font-weight:800;color:var(--gold);margin:6px 0 2px}
+.tt-pct{font-size:11.5px;color:var(--txt-dim);margin-bottom:10px}
+.tt-pct b{color:var(--total)}
+.tt-break{display:grid;gap:7px}
+.tt-line{display:flex;align-items:center;gap:8px;font-size:11.5px}
+.tt-line .k{width:9px;height:9px;border-radius:3px;flex:none}
+.tt-line .n{color:var(--txt-dim);flex:none;width:56px}
+.tt-line .track{flex:1;height:6px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden}
+.tt-line .fill{height:100%;border-radius:4px}
+.tt-line .v{color:var(--txt);font-weight:700;width:34px;text-align:right}
+.legend{display:flex;align-items:center;gap:12px;margin-top:14px;flex-wrap:wrap}
+.legend .bar{height:12px;width:230px;border-radius:6px}
+.legend .ticks{display:flex;justify-content:space-between;width:230px;color:var(--txt-faint);font-size:10.5px;margin-top:3px}
+.legend .cap{color:var(--txt-dim);font-size:12px;font-weight:600}
+.map-fallback{padding:40px;text-align:center;color:var(--txt-dim);font-size:13.5px;line-height:1.7}
+
+/* ---------- Top10 ---------- */
+.bars{display:flex;flex-direction:column;gap:11px}
+.brow{display:grid;grid-template-columns:26px 132px 1fr 62px;align-items:center;gap:12px;cursor:default}
+.brow .rk{font-size:13px;font-weight:800;color:var(--txt-faint);text-align:center}
+.brow .cn{font-size:13px;font-weight:600;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brow .tk{height:16px;border-radius:8px;background:rgba(255,255,255,.06);overflow:hidden;position:relative}
+.brow .fl{height:100%;border-radius:8px;width:0;transition:width 1.1s cubic-bezier(.22,1,.36,1);position:relative;overflow:hidden}
+.brow .fl::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transform:translateX(-100%);animation:sweep 2.6s ease-in-out infinite}
+@keyframes sweep{0%{transform:translateX(-100%)}55%,100%{transform:translateX(200%)}}
+.brow .vv{font-size:13px;font-weight:800;text-align:right;color:var(--gold);font-variant-numeric:tabular-nums}
+.brow:hover .cn{color:var(--gold)}
+
+/* ---------- Correlation ---------- */
+.corr-cards{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.ccard{flex:1;min-width:90px;background:rgba(0,0,0,.25);border:1px solid var(--stroke);border-radius:14px;padding:12px 14px;text-align:center;transition:.3s}
+.ccard .r{font-size:24px;font-weight:800;letter-spacing:-.5px}
+.ccard .l{font-size:11px;color:var(--txt-dim);margin-top:3px;font-weight:600}
+.ccard .s{font-size:10px;color:var(--txt-faint);margin-top:2px}
+.dotc{transition:r .2s,opacity .2s,fill .4s}
+.dotc:hover{stroke:#fff;stroke-width:1.5px}
+
+/* forecast */
+.fc-legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px}
+.fc-legend div{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--txt-dim);font-weight:600}
+.fc-legend .k{width:16px;height:4px;border-radius:3px}
+.fc-legend .kd{width:16px;height:0;border-top:2.5px dashed var(--spirit)}
+.fc-stats{display:flex;gap:22px;flex-wrap:wrap;margin-top:16px;padding-top:16px;border-top:1px solid var(--stroke)}
+.fc-stat .v{font-size:20px;font-weight:800;color:var(--gold)}
+.fc-stat .l{font-size:11px;color:var(--txt-dim);margin-top:2px;font-weight:600}
+.note{margin-top:14px;font-size:11.5px;color:var(--txt-faint);line-height:1.65;background:rgba(255,255,255,.03);border-left:2px solid var(--amber);padding:9px 13px;border-radius:0 10px 10px 0}
+
+.axis text{fill:var(--txt-faint);font-size:10.5px}
+.axis line,.axis path{stroke:rgba(255,255,255,.08)}
+.grid-l line{stroke:rgba(255,255,255,.05)}
+
+footer{text-align:center;color:var(--txt-faint);font-size:11.5px;margin-top:44px;line-height:1.7}
+footer b{color:var(--txt-dim)}
+.signature{margin-top:12px;font-size:12.5px;color:var(--txt-dim);font-weight:600;letter-spacing:.2px}
+.signature .heart{color:var(--spirit);display:inline-block;transform-origin:center;animation:beat 1.4s ease-in-out infinite}
+@keyframes beat{0%,100%{transform:scale(1)}25%{transform:scale(1.3)}40%{transform:scale(1)}60%{transform:scale(1.18)}}
+
+/* ---------- Hero toolbar / CSV import ---------- */
+.hero-toolbar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:26px;opacity:0;transform:translateY(18px);animation:riseIn .8s .12s forwards}
+.import-btn{
+  display:inline-flex;align-items:center;gap:9px;padding:12px 21px;border-radius:14px;
+  background:linear-gradient(135deg,var(--amber),var(--amber-2));color:#1a1030;font-weight:700;font-size:13.5px;
+  cursor:pointer;box-shadow:0 10px 26px -8px rgba(255,122,26,.55);transition:transform .25s,box-shadow .25s;
+  position:relative;overflow:hidden;white-space:nowrap;user-select:none}
+.import-btn::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.5) 50%,transparent 70%);transform:translateX(-120%);transition:none}
+.import-btn:hover{transform:translateY(-3px);box-shadow:0 16px 34px -8px rgba(255,122,26,.7)}
+.import-btn:hover::after{transform:translateX(120%);transition:transform .8s ease}
+.import-btn:active{transform:translateY(-1px)}
+.import-btn .ico{font-size:16px}
+.import-btn.alt{background:linear-gradient(135deg,var(--water),var(--totalna));color:#08182b;box-shadow:0 10px 26px -8px rgba(58,160,255,.55)}
+.import-btn.alt:hover{box-shadow:0 16px 34px -8px rgba(58,160,255,.7)}
+.import-meta{font-size:12px;color:var(--txt-dim);display:flex;align-items:center;gap:9px;font-weight:500;flex-wrap:wrap}
+.import-meta .dotsep{color:var(--txt-faint)}
+.import-meta b{color:var(--txt)}
+
+/* ---------- Category toggle ---------- */
+.category-row{display:flex;justify-content:center;margin-bottom:22px;opacity:0;transform:translateY(18px);animation:riseIn .8s .08s forwards}
+.category-row .seg{padding:5px;gap:4px}
+.category-row .seg button{padding:10px 22px;font-size:13px}
+
+/* ---------- Toasts ---------- */
+.toast-stack{position:fixed;right:20px;bottom:20px;z-index:200;display:flex;flex-direction:column-reverse;gap:12px;align-items:flex-end;pointer-events:none}
+.toast{
+  pointer-events:auto;min-width:270px;max-width:360px;
+  background:linear-gradient(180deg,rgba(28,20,48,.98),rgba(16,11,27,.98));
+  border:1px solid var(--stroke-strong);border-radius:16px;padding:14px 16px 15px;box-shadow:var(--shadow);
+  display:flex;gap:11px;align-items:flex-start;position:relative;overflow:hidden;
+  transform:translateX(130%) scale(.96);opacity:0;transition:transform .45s cubic-bezier(.22,1,.36,1),opacity .4s}
+.toast.show{transform:translateX(0) scale(1);opacity:1}
+.toast.hide{transform:translateX(130%) scale(.96);opacity:0}
+.toast .ic{font-size:19px;flex:none;line-height:1;margin-top:1px}
+.toast .body{flex:1;min-width:0}
+.toast .ttl{font-weight:700;font-size:13px}
+.toast .msg{font-size:11.5px;color:var(--txt-dim);margin-top:3px;line-height:1.5;word-break:break-word}
+.toast .close{background:transparent;border:0;color:var(--txt-faint);cursor:pointer;font-size:14px;line-height:1;padding:3px;flex:none;transition:color .2s}
+.toast .close:hover{color:var(--txt)}
+.toast .prog{position:absolute;left:0;bottom:0;height:3px;width:100%;background:var(--total)}
+.toast.success .ttl{color:var(--total)}
+.toast.success .prog{background:linear-gradient(90deg,var(--total),var(--cyan))}
+.toast.error .ttl{color:var(--spirit)}
+.toast.error .prog{background:linear-gradient(90deg,var(--spirit),var(--pink))}
+
+@keyframes riseIn{to{opacity:1;transform:translateY(0)}}
+.d1{animation-delay:.15s}.d2{animation-delay:.3s}.d3{animation-delay:.45s}.d4{animation-delay:.6s}.d5{animation-delay:.75s}
+</style>
+</head>
+<body>
+<div class="orbs"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div></div>
+
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo">🍻</div>
+      <div>
+        <h1>Dash<span>Smart</span> · Consumo Global de Bebidas</h1>
+        <p>Inteligência de dados sobre bebidas alcoólicas e não alcoólicas em 193 países</p>
+      </div>
+    </div>
+    <div class="header-meta">
+      <div>Fontes: <b>drinks.csv</b> &amp; <b>drinks_2.csv</b> · consumo per capita</div>
+      <div>Métricas: porções/ano &amp; litros de álcool puro</div>
+      <div id="hdate">—</div>
+    </div>
+  </header>
+
+  <div class="category-row">
+    <div class="seg" id="category-seg">
+      <button data-c="alcoholic" class="on" style="--acc:var(--amber-2)"><span class="sw" style="background:var(--amber-2)"></span>🍸 Bebidas Alcoólicas</button>
+      <button data-c="nonalcoholic" style="--acc:var(--totalna)"><span class="sw" style="background:var(--totalna)"></span>🥤 Bebidas Não Alcoólicas</button>
+    </div>
+  </div>
+
+  <div class="hero-toolbar">
+    <label class="import-btn" for="csvAlc"><span class="ico">🍸</span><span>Importar bebidas alcoólicas</span></label>
+    <input type="file" id="csvAlc" accept=".csv,text/csv" style="display:none">
+    <label class="import-btn alt" for="csvNonAlc"><span class="ico">🥤</span><span>Importar bebidas não alcoólicas</span></label>
+    <input type="file" id="csvNonAlc" accept=".csv,text/csv" style="display:none">
+    <div class="import-meta">
+      <span id="datasetInfo">193 países carregados</span>
+      <span class="dotsep">•</span>
+      <span id="datasetSource">drinks.csv + drinks_2.csv (padrão)</span>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <section class="kpis" id="kpis">
+    <div class="kpi k1"><div class="ico" id="kpi-ico-1">🍺</div><div class="val" id="kpi-val-1">0</div><div class="lbl" id="kpi-lbl-1">Maior consumidor de cerveja</div><div class="sub" id="kpi-sub-1">—</div><div class="bar"></div></div>
+    <div class="kpi k2"><div class="ico" id="kpi-ico-2">🌡️</div><div class="val" id="kpi-val-2">0</div><div class="lbl" id="kpi-lbl-2">Maior consumo de álcool puro (L)</div><div class="sub" id="kpi-sub-2">—</div><div class="bar"></div></div>
+    <div class="kpi k3"><div class="ico" id="kpi-ico-3">🍷</div><div class="val" id="kpi-val-3">0</div><div class="lbl" id="kpi-lbl-3">Maior consumidor de vinho</div><div class="sub" id="kpi-sub-3">—</div><div class="bar"></div></div>
+    <div class="kpi k4"><div class="ico" id="kpi-ico-4">🥃</div><div class="val" id="kpi-val-4">0</div><div class="lbl" id="kpi-lbl-4">Maior consumidor de destilados</div><div class="sub" id="kpi-sub-4">—</div><div class="bar"></div></div>
+  </section>
+
+  <!-- MAP -->
+  <div class="grid" style="margin-bottom:22px">
+    <section class="panel d1" id="map-panel">
+      <div class="ptitle"><span class="dot" style="color:var(--total)"></span>Mapa Coroplético Interativo</div>
+      <div class="psub">Passe o mouse sobre um país para ver detalhes e a participação (%) no maior consumo global. Use os filtros para trocar a métrica e o corte mínimo.</div>
+      <div class="controls">
+        <div class="seg" id="metric-seg"></div>
+        <div class="slider-wrap">
+          <label>Consumo mínimo</label>
+          <input type="range" id="minr" min="0" max="100" value="0" step="1">
+          <output id="minout">0%</output>
+        </div>
+        <input class="search" id="csearch" placeholder="🔎 Buscar país…" autocomplete="off">
+      </div>
+      <div class="map-shell"><div id="map"></div></div>
+      <div class="legend" id="legend"></div>
+    </section>
+  </div>
+
+  <!-- TOP10 + CORRELATION -->
+  <div class="grid row-2" style="margin-bottom:22px">
+    <section class="panel d2">
+      <div class="ptitle"><span class="dot" style="color:var(--gold)"></span>Top 10 Maiores Consumidores</div>
+      <div class="psub" id="top-sub">Ranking global — acompanha a métrica selecionada no mapa</div>
+      <div class="bars" id="bars"></div>
+    </section>
+
+    <section class="panel d3">
+      <div class="ptitle"><span class="dot" style="color:var(--spirit)"></span>Correlação: <span id="corr-total-label">Álcool Total</span> × Tipo de Bebida</div>
+      <div class="psub">Cada ponto é um país. A reta é a regressão linear (OLS); <b>r</b> é a correlação de Pearson.</div>
+      <div class="controls" style="margin-bottom:8px">
+        <div class="seg" id="corr-seg"></div>
+      </div>
+      <div id="scatter"></div>
+      <div class="corr-cards" id="corr-cards"></div>
+    </section>
+  </div>
+
+  <!-- FORECAST -->
+  <div class="grid" style="margin-bottom:10px">
+    <section class="panel d4">
+      <div class="ptitle"><span class="dot" style="color:var(--beer)"></span>Regressão Linear · Previsão de Consumo de Cerveja</div>
+      <div class="psub" id="fc-sub">—</div>
+      <div id="forecast"></div>
+      <div class="fc-legend">
+        <div><span class="k" style="background:var(--beer)"></span>Série mensal (modelada)</div>
+        <div><span class="k" style="background:var(--gold)"></span>Reta de regressão (OLS)</div>
+        <div><span class="kd"></span>Previsão · próximos 3 meses</div>
+      </div>
+      <div class="fc-stats" id="fc-stats"></div>
+      <div class="note" id="fc-note"></div>
+    </section>
+  </div>
+
+  <footer>
+    <div><b>DashSmart</b> — dashboard analítico autocontido (HTML + CSS + JavaScript em arquivo único).</div>
+    <div>Arraste para mover o mapa · role para dar zoom · todos os gráficos são interativos.</div>
+    <div class="signature">feito com <span class="heart">♥</span> por fernanda</div>
+  </footer>
+</div>
+
+<div class="tooltip" id="tt"></div>
+<div class="toast-stack" id="toastStack"></div>
+
+<script>
+/* ============================================================
+   DADOS EMBUTIDOS (drinks.csv) — dashboard 100% offline/portátil
+   ============================================================ */
+const CSV = `country,beer_servings,spirit_servings,wine_servings,total_litres_of_pure_alcohol
+Afghanistan,0,0,0,0.0
+Albania,89,132,54,4.9
+Algeria,25,0,14,0.7
+Andorra,245,138,312,12.4
+Angola,217,57,45,5.9
+Antigua & Barbuda,102,128,45,4.9
+Argentina,193,25,221,8.3
+Armenia,21,179,11,3.8
+Australia,261,72,212,10.4
+Austria,279,75,191,9.7
+Azerbaijan,21,46,5,1.3
+Bahamas,122,176,51,6.3
+Bahrain,42,63,7,2.0
+Bangladesh,0,0,0,0.0
+Barbados,143,173,36,6.3
+Belarus,142,373,42,14.4
+Belgium,295,84,212,10.5
+Belize,263,114,8,6.8
+Benin,34,4,13,1.1
+Bhutan,23,0,0,0.4
+Bolivia,167,41,8,3.8
+Bosnia-Herzegovina,76,173,8,4.6
+Botswana,173,35,35,5.4
+Brazil,245,145,16,7.2
+Brunei,31,2,1,0.6
+Bulgaria,231,252,94,10.3
+Burkina Faso,25,7,7,4.3
+Burundi,88,0,0,6.3
+Cote d'Ivoire,37,1,7,4.0
+Cabo Verde,144,56,16,4.0
+Cambodia,57,65,1,2.2
+Cameroon,147,1,4,5.8
+Canada,240,122,100,8.2
+Central African Republic,17,2,1,1.8
+Chad,15,1,1,0.4
+Chile,130,124,172,7.6
+China,79,192,8,5.0
+Colombia,159,76,3,4.2
+Comoros,1,3,1,0.1
+Congo,76,1,9,1.7
+Cook Islands,0,254,74,5.9
+Costa Rica,149,87,11,4.4
+Croatia,230,87,254,10.2
+Cuba,93,137,5,4.2
+Cyprus,192,154,113,8.2
+Czech Republic,361,170,134,11.8
+North Korea,0,0,0,0.0
+DR Congo,32,3,1,2.3
+Denmark,224,81,278,10.4
+Djibouti,15,44,3,1.1
+Dominica,52,286,26,6.6
+Dominican Republic,193,147,9,6.2
+Ecuador,162,74,3,4.2
+Egypt,6,4,1,0.2
+El Salvador,52,69,2,2.2
+Equatorial Guinea,92,0,233,5.8
+Eritrea,18,0,0,0.5
+Estonia,224,194,59,9.5
+Ethiopia,20,3,0,0.7
+Fiji,77,35,1,2.0
+Finland,263,133,97,10.0
+France,127,151,370,11.8
+Gabon,347,98,59,8.9
+Gambia,8,0,1,2.4
+Georgia,52,100,149,5.4
+Germany,346,117,175,11.3
+Ghana,31,3,10,1.8
+Greece,133,112,218,8.3
+Grenada,199,438,28,11.9
+Guatemala,53,69,2,2.2
+Guinea,9,0,2,0.2
+Guinea-Bissau,28,31,21,2.5
+Guyana,93,302,1,7.1
+Haiti,1,326,1,5.9
+Honduras,69,98,2,3.0
+Hungary,234,215,185,11.3
+Iceland,233,61,78,6.6
+India,9,114,0,2.2
+Indonesia,5,1,0,0.1
+Iran,0,0,0,0.0
+Iraq,9,3,0,0.2
+Ireland,313,118,165,11.4
+Israel,63,69,9,2.5
+Italy,85,42,237,6.5
+Jamaica,82,97,9,3.4
+Japan,77,202,16,7.0
+Jordan,6,21,1,0.5
+Kazakhstan,124,246,12,6.8
+Kenya,58,22,2,1.8
+Kiribati,21,34,1,1.0
+Kuwait,0,0,0,0.0
+Kyrgyzstan,31,97,6,2.4
+Laos,62,0,123,6.2
+Latvia,281,216,62,10.5
+Lebanon,20,55,31,1.9
+Lesotho,82,29,0,2.8
+Liberia,19,152,2,3.1
+Libya,0,0,0,0.0
+Lithuania,343,244,56,12.9
+Luxembourg,236,133,271,11.4
+Madagascar,26,15,4,0.8
+Malawi,8,11,1,1.5
+Malaysia,13,4,0,0.3
+Maldives,0,0,0,0.0
+Mali,5,1,1,0.6
+Malta,149,100,120,6.6
+Marshall Islands,0,0,0,0.0
+Mauritania,0,0,0,0.0
+Mauritius,98,31,18,2.6
+Mexico,238,68,5,5.5
+Micronesia,62,50,18,2.3
+Monaco,0,0,0,0.0
+Mongolia,77,189,8,4.9
+Montenegro,31,114,128,4.9
+Morocco,12,6,10,0.5
+Mozambique,47,18,5,1.3
+Myanmar,5,1,0,0.1
+Namibia,376,3,1,6.8
+Nauru,49,0,8,1.0
+Nepal,5,6,0,0.2
+Netherlands,251,88,190,9.4
+New Zealand,203,79,175,9.3
+Nicaragua,78,118,1,3.5
+Niger,3,2,1,0.1
+Nigeria,42,5,2,9.1
+Niue,188,200,7,7.0
+Norway,169,71,129,6.7
+Oman,22,16,1,0.7
+Pakistan,0,0,0,0.0
+Palau,306,63,23,6.9
+Panama,285,104,18,7.2
+Papua New Guinea,44,39,1,1.5
+Paraguay,213,117,74,7.3
+Peru,163,160,21,6.1
+Philippines,71,186,1,4.6
+Poland,343,215,56,10.9
+Portugal,194,67,339,11.0
+Qatar,1,42,7,0.9
+South Korea,140,16,9,9.8
+Moldova,109,226,18,6.3
+Romania,297,122,167,10.4
+Russian Federation,247,326,73,11.5
+Rwanda,43,2,0,6.8
+St. Kitts & Nevis,194,205,32,7.7
+St. Lucia,171,315,71,10.1
+St. Vincent & the Grenadines,120,221,11,6.3
+Samoa,105,18,24,2.6
+San Marino,0,0,0,0.0
+Sao Tome & Principe,56,38,140,4.2
+Saudi Arabia,0,5,0,0.1
+Senegal,9,1,7,0.3
+Serbia,283,131,127,9.6
+Seychelles,157,25,51,4.1
+Sierra Leone,25,3,2,6.7
+Singapore,60,12,11,1.5
+Slovakia,196,293,116,11.4
+Slovenia,270,51,276,10.6
+Solomon Islands,56,11,1,1.2
+Somalia,0,0,0,0.0
+South Africa,225,76,81,8.2
+Spain,284,157,112,10.0
+Sri Lanka,16,104,0,2.2
+Sudan,8,13,0,1.7
+Suriname,128,178,7,5.6
+Swaziland,90,2,2,4.7
+Sweden,152,60,186,7.2
+Switzerland,185,100,280,10.2
+Syria,5,35,16,1.0
+Tajikistan,2,15,0,0.3
+Thailand,99,258,1,6.4
+Macedonia,106,27,86,3.9
+Timor-Leste,1,1,4,0.1
+Togo,36,2,19,1.3
+Tonga,36,21,5,1.1
+Trinidad & Tobago,197,156,7,6.4
+Tunisia,51,3,20,1.3
+Turkey,51,22,7,1.4
+Turkmenistan,19,71,32,2.2
+Tuvalu,6,41,9,1.0
+Uganda,45,9,0,8.3
+Ukraine,206,237,45,8.9
+United Arab Emirates,16,135,5,2.8
+United Kingdom,219,126,195,10.4
+Tanzania,36,6,1,5.7
+USA,249,158,84,8.7
+Uruguay,115,35,220,6.6
+Uzbekistan,25,101,8,2.4
+Vanuatu,21,18,11,0.9
+Venezuela,333,100,3,7.7
+Vietnam,111,2,1,2.0
+Yemen,6,0,0,0.1
+Zambia,32,19,4,2.5
+Zimbabwe,64,18,4,4.7`;
+
+/* ============================================================
+   DADOS EMBUTIDOS (drinks_2.csv) — bebidas não alcoólicas
+   ============================================================ */
+const CSV_NA = `country,juice_servings,soda_servings,water_servings,tea_servings
+Afghanistan,15,40,50,20
+Albania,15,40,50,20
+Algeria,15,40,50,20
+Andorra,15,40,50,20
+Angola,15,40,50,20
+Antigua & Barbuda,15,40,50,20
+Argentina,16,116,85,7
+Armenia,15,40,50,20
+Australia,44,40,70,25
+Austria,80,6,50,9
+Azerbaijan,15,40,50,70
+Bahamas,15,40,50,20
+Bahrain,15,40,50,20
+Bangladesh,15,40,50,20
+Barbados,15,40,50,20
+Belarus,15,40,50,20
+Belgium,36,204,125,4
+Belize,15,40,50,20
+Benin,15,40,50,20
+Bhutan,15,40,50,20
+Bolivia,15,66,50,20
+Bosnia-Herzegovina,15,40,50,20
+Botswana,15,40,50,20
+Brazil,24,56,90,20
+Brunei,15,40,50,20
+Bulgaria,15,3,50,3
+Burkina Faso,15,40,50,20
+Burundi,15,40,50,20
+Cote d'Ivoire,15,40,50,20
+Cabo Verde,15,40,50,20
+Cambodia,15,40,50,20
+Cameroon,15,40,50,20
+Canada,88,52,65,17
+Central African Republic,15,40,50,20
+Chad,15,40,50,20
+Chile,15,105,80,39
+China,8,40,45,18
+Colombia,15,40,50,1
+Comoros,15,40,50,20
+Congo,15,40,50,20
+Cook Islands,15,40,50,20
+Costa Rica,15,40,50,20
+Croatia,15,40,50,20
+Cuba,15,40,50,20
+Cyprus,15,40,50,20
+Czech Republic,15,15,50,14
+North Korea,15,40,50,20
+DR Congo,15,40,50,20
+Denmark,15,40,50,5
+Djibouti,15,40,50,20
+Dominica,15,40,50,20
+Dominican Republic,15,40,50,20
+Ecuador,15,40,50,20
+Egypt,15,40,50,33
+El Salvador,15,40,50,20
+Equatorial Guinea,15,40,50,20
+Eritrea,15,40,50,20
+Estonia,15,40,50,20
+Ethiopia,15,40,50,20
+Fiji,15,40,50,20
+Finland,60,40,50,8
+France,52,60,145,6
+Gabon,15,40,50,20
+Gambia,15,40,50,20
+Georgia,15,40,50,20
+Germany,120,90,140,23
+Ghana,15,40,50,20
+Greece,15,7,105,1
+Grenada,15,40,50,20
+Guatemala,15,40,50,20
+Guinea,15,40,50,20
+Guinea-Bissau,15,40,50,20
+Guyana,15,40,50,20
+Haiti,15,40,50,20
+Honduras,15,40,50,20
+Hungary,15,232,130,9
+Iceland,15,40,50,20
+India,4,40,40,11
+Indonesia,4,33,35,15
+Iran,15,40,50,50
+Iraq,15,40,50,20
+Ireland,15,40,50,78
+Israel,15,40,100,6
+Italy,28,48,222,4
+Jamaica,15,40,50,20
+Japan,12,37,55,32
+Jordan,15,40,50,20
+Kazakhstan,15,40,50,20
+Kenya,15,40,50,20
+Kiribati,15,40,50,20
+Kuwait,15,40,50,20
+Kyrgyzstan,15,40,50,20
+Laos,15,40,50,20
+Latvia,15,40,50,20
+Lebanon,15,40,50,20
+Lesotho,15,40,50,20
+Liberia,15,40,50,20
+Libya,15,40,50,20
+Lithuania,15,40,50,20
+Luxembourg,15,40,50,20
+Madagascar,15,40,50,20
+Malawi,15,40,50,20
+Malaysia,15,40,50,16
+Maldives,15,40,50,20
+Mali,15,40,50,20
+Malta,15,40,50,20
+Marshall Islands,15,40,50,20
+Mauritania,15,40,50,20
+Mauritius,15,40,50,20
+Mexico,20,102,282,20
+Micronesia,15,40,50,20
+Monaco,15,40,50,20
+Mongolia,15,40,50,20
+Montenegro,15,40,50,20
+Morocco,15,40,50,40
+Mozambique,15,40,50,20
+Myanmar,15,40,50,20
+Namibia,15,40,50,20
+Nauru,15,40,50,20
+Nepal,15,40,50,20
+Netherlands,68,40,50,26
+New Zealand,40,40,50,39
+Nicaragua,15,40,50,20
+Niger,15,40,50,20
+Nigeria,15,40,50,20
+Niue,15,40,50,20
+Norway,64,75,50,9
+Oman,15,40,50,20
+Pakistan,15,40,50,50
+Palau,15,40,50,20
+Panama,15,40,50,20
+Papua New Guinea,15,40,50,20
+Paraguay,15,40,50,20
+Peru,15,40,50,1
+Philippines,15,40,50,1
+Poland,15,26,50,33
+Portugal,15,11,110,2
+Qatar,15,40,50,20
+South Korea,15,40,50,5
+Moldova,15,40,50,20
+Romania,15,22,50,2
+Russian Federation,15,40,50,20
+Rwanda,15,40,50,20
+St. Kitts & Nevis,15,40,50,20
+St. Lucia,15,40,50,20
+St. Vincent & the Grenadines,15,40,50,20
+Samoa,15,40,50,20
+San Marino,15,40,50,20
+Sao Tome & Principe,15,40,50,20
+Saudi Arabia,15,71,120,30
+Senegal,15,40,50,20
+Serbia,15,40,50,20
+Seychelles,15,40,50,20
+Sierra Leone,15,40,50,20
+Singapore,15,40,50,12
+Slovakia,15,40,50,12
+Slovenia,15,40,50,20
+Solomon Islands,15,40,50,20
+Somalia,15,40,50,20
+South Africa,15,40,30,27
+Spain,32,45,135,5
+Sri Lanka,15,40,50,20
+Sudan,15,40,50,20
+Suriname,15,40,50,20
+Swaziland,15,40,50,20
+Sweden,56,18,50,9
+Switzerland,72,40,50,14
+Syria,15,40,50,20
+Tajikistan,15,40,50,20
+Thailand,15,40,215,1
+Macedonia,15,40,50,20
+Timor-Leste,15,40,50,20
+Togo,15,40,50,20
+Tonga,15,40,50,20
+Trinidad & Tobago,15,40,50,20
+Tunisia,15,40,50,20
+Turkey,15,30,95,105
+Turkmenistan,15,40,50,20
+Tuvalu,15,40,50,20
+Uganda,15,40,50,20
+Ukraine,15,40,50,19
+United Arab Emirates,15,40,115,24
+United Kingdom,48,40,60,60
+Tanzania,15,40,50,20
+USA,15,40,50,20
+Uruguay,15,84,75,20
+Uzbekistan,15,40,50,20
+Vanuatu,15,40,50,20
+Venezuela,15,40,50,1
+Vietnam,15,40,50,6
+Yemen,15,40,50,20
+Zambia,15,40,50,20
+Zimbabwe,15,40,50,20`;
+
+function parseDrinksCSV(text){
+  const rows = d3.csvParse(text);
+  if(!rows.length) throw new Error('O arquivo está vazio.');
+  const cols = rows.columns.map(c=>c.trim().toLowerCase());
+  const req = ['country','beer_servings','spirit_servings','wine_servings','total_litres_of_pure_alcohol'];
+  const missing = req.filter(r=>!cols.includes(r));
+  if(missing.length) throw new Error('Colunas ausentes no CSV: '+missing.join(', '));
+  const colMap = {};
+  rows.columns.forEach(c=>colMap[c.trim().toLowerCase()]=c);
+  let skipped = 0;
+  const parsed = rows.map(d=>{
+    const rec = {
+      country: (d[colMap.country]||'').trim(),
+      beer: +d[colMap.beer_servings],
+      spirit: +d[colMap.spirit_servings],
+      wine: +d[colMap.wine_servings],
+      total: +d[colMap.total_litres_of_pure_alcohol]
+    };
+    return rec;
+  }).filter(rec=>{
+    const ok = rec.country && [rec.beer,rec.spirit,rec.wine,rec.total].every(v=>!Number.isNaN(v));
+    if(!ok) skipped++;
+    return ok;
+  });
+  if(!parsed.length) throw new Error('Nenhuma linha válida encontrada no CSV.');
+  parsed.__skipped = skipped;
+  return parsed;
+}
+
+function parseNonAlcCSV(text){
+  const rows = d3.csvParse(text);
+  if(!rows.length) throw new Error('O arquivo está vazio.');
+  const cols = rows.columns.map(c=>c.trim().toLowerCase());
+  const req = ['country','juice_servings','soda_servings','water_servings','tea_servings'];
+  const missing = req.filter(r=>!cols.includes(r));
+  if(missing.length) throw new Error('Colunas ausentes no CSV: '+missing.join(', '));
+  const colMap = {};
+  rows.columns.forEach(c=>colMap[c.trim().toLowerCase()]=c);
+  let skipped = 0;
+  const parsed = rows.map(d=>{
+    const rec = {
+      country: (d[colMap.country]||'').trim(),
+      juice: +d[colMap.juice_servings],
+      soda: +d[colMap.soda_servings],
+      water: +d[colMap.water_servings],
+      tea: +d[colMap.tea_servings]
+    };
+    return rec;
+  }).filter(rec=>{
+    const ok = rec.country && [rec.juice,rec.soda,rec.water,rec.tea].every(v=>!Number.isNaN(v));
+    if(!ok) skipped++;
+    return ok;
+  });
+  if(!parsed.length) throw new Error('Nenhuma linha válida encontrada no CSV.');
+  parsed.__skipped = skipped;
+  return parsed;
+}
+
+let ALC = parseDrinksCSV(CSV);
+let NONALC = parseNonAlcCSV(CSV_NA);
+let DATA = [];
+
+const METRICS = {
+  total:    {key:'total',    label:'Álcool puro',        short:'Álcool puro (L)',        unit:' L', color:'#2ee6c4', ramp:['#0d3b34','#12897a','#2ee6c4','#b6fff0'], fmt:v=>v.toFixed(1)},
+  beer:     {key:'beer',     label:'Cerveja',            short:'Cerveja (porções)',       unit:'',   color:'#ffb01f', ramp:['#3a2600','#8a5c00','#ffb01f','#ffe6a3'], fmt:v=>d3.format(',')(v)},
+  spirit:   {key:'spirit',   label:'Destilados',         short:'Destilados (porções)',    unit:'',   color:'#ff4d8d', ramp:['#3d0a20','#8a1444','#ff4d8d','#ffc2d8'], fmt:v=>d3.format(',')(v)},
+  wine:     {key:'wine',     label:'Vinho',              short:'Vinho (porções)',         unit:'',   color:'#b06bff', ramp:['#26103f','#5a2f9c','#b06bff','#e3ccff'], fmt:v=>d3.format(',')(v)},
+  total_na: {key:'total_na', label:'Não alcoólico total',short:'Não alcoólico (porções)', unit:'',   color:'#3aa0ff', ramp:['#001b3d','#0a5c99','#3aa0ff','#bfe3ff'], fmt:v=>d3.format(',')(v)},
+  juice:    {key:'juice',    label:'Suco',               short:'Suco (porções)',          unit:'',   color:'#ffd35c', ramp:['#3d2f00','#8a6a00','#ffd35c','#fff3c2'], fmt:v=>d3.format(',')(v)},
+  soda:     {key:'soda',     label:'Refrigerante',       short:'Refrigerante (porções)',  unit:'',   color:'#ff6f3c', ramp:['#3d1600','#8a3a00','#ff6f3c','#ffcbb0'], fmt:v=>d3.format(',')(v)},
+  water:    {key:'water',    label:'Água',               short:'Água (porções)',          unit:'',   color:'#29d1ff', ramp:['#00323d','#00758a','#29d1ff','#b8f0ff'], fmt:v=>d3.format(',')(v)},
+  tea:      {key:'tea',      label:'Chá',                short:'Chá (porções)',           unit:'',   color:'#6fcf6f', ramp:['#0f3d0f','#2f7a2f','#6fcf6f','#c8f0c8'], fmt:v=>d3.format(',')(v)}
+};
+
+const CATS = {
+  alcoholic:    {totalKey:'total',    parts:['beer','spirit','wine'],       label:'Bebidas Alcoólicas'},
+  nonalcoholic: {totalKey:'total_na', parts:['juice','soda','water','tea'], label:'Bebidas Não Alcoólicas'}
+};
+
+const kpiSpecs = {
+  alcoholic: [
+    {m:'beer',   icon:'🍺', label:'Maior consumidor de cerveja',           sub:'porções/ano'},
+    {m:'total',  icon:'🌡️', label:'Maior consumo de álcool puro (L)',      sub:'litros/ano'},
+    {m:'wine',   icon:'🍷', label:'Maior consumidor de vinho',             sub:'porções/ano'},
+    {m:'spirit', icon:'🥃', label:'Maior consumidor de destilados',        sub:'porções/ano'}
+  ],
+  nonalcoholic: [
+    {m:'juice',    icon:'🧃', label:'Maior consumidor de suco',                sub:'porções/ano'},
+    {m:'total_na', icon:'🌊', label:'Maior consumo não alcoólico total',       sub:'porções/ano'},
+    {m:'water',    icon:'💧', label:'Maior consumidor de água',                sub:'porções/ano'},
+    {m:'tea',      icon:'🍵', label:'Maior consumidor de chá',                 sub:'porções/ano'}
+  ]
+};
+
+const state = {category:'alcoholic', metric:'total', minPct:0, search:''};
+const maxOf = m => d3.max(DATA, d=>d[m]);
+const tt = document.getElementById('tt');
+
+/* ---------- helpers ---------- */
+function norm(s){return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]/g,'');}
+let byCountry;
+function mergeData(){
+  const am = new Map(ALC.map(d=>[norm(d.country), d]));
+  const nm = new Map(NONALC.map(d=>[norm(d.country), d]));
+  const keys = new Set([...am.keys(), ...nm.keys()]);
+  DATA = Array.from(keys).map(k=>{
+    const a = am.get(k) || {}, n = nm.get(k) || {};
+    const country = a.country || n.country;
+    const beer=a.beer||0, spirit=a.spirit||0, wine=a.wine||0, total=a.total||0;
+    const juice=n.juice||0, soda=n.soda||0, water=n.water||0, tea=n.tea||0;
+    return {country, beer, spirit, wine, total, juice, soda, water, tea, total_na: juice+soda+water+tea};
+  }).sort((x,y)=>x.country.localeCompare(y.country));
+  byCountry = new Map(DATA.map(d=>[norm(d.country), d]));
+}
+mergeData();
+
+/* ============================================================
+   KPIs + count-up
+   ============================================================ */
+function topBy(m){return DATA.slice().sort((a,b)=>b[m]-a[m])[0];}
+function countUp(el, target, dur, fmt){
+  const start=performance.now();
+  (function tick(now){
+    const p=Math.min(1,(now-start)/dur), e=1-Math.pow(1-p,3);
+    el.textContent=fmt(target*e);
+    if(p<1)requestAnimationFrame(tick);
+  })(start);
+}
+function initKPIs(){
+  const specs = kpiSpecs[state.category];
+  specs.forEach((s,idx)=>{
+    const i=idx+1, top=topBy(s.m);
+    const fmt = s.m==='total' ? (v=>v.toFixed(1)) : (v=>Math.round(v).toLocaleString('pt-BR'));
+    document.getElementById('kpi-ico-'+i).textContent = s.icon;
+    document.getElementById('kpi-lbl-'+i).textContent = s.label;
+    countUp(document.getElementById('kpi-val-'+i), top[s.m], 1400, fmt);
+    document.getElementById('kpi-sub-'+i).textContent = (idx===0?'🏆 ':'') + top.country + ' · ' + s.sub;
+  });
+  document.getElementById('hdate').textContent='Gerado em '+new Date().toLocaleDateString('pt-BR');
+}
+
+/* ============================================================
+   MAPA COROPLÉTICO
+   ============================================================ */
+const rawAliases = {
+  "United States of America":"USA","Russia":"Russian Federation","Dem. Rep. Congo":"DR Congo",
+  "Central African Rep.":"Central African Republic","Czechia":"Czech Republic",
+  "Bosnia and Herz.":"Bosnia-Herzegovina","North Macedonia":"Macedonia","Macedonia":"Macedonia",
+  "Côte d'Ivoire":"Cote d'Ivoire","Ivory Coast":"Cote d'Ivoire","Dominican Rep.":"Dominican Republic",
+  "Eq. Guinea":"Equatorial Guinea","Solomon Is.":"Solomon Islands","East Timor":"Timor-Leste",
+  "Cape Verde":"Cabo Verde","eSwatini":"Swaziland","Swaziland":"Swaziland","Korea":"South Korea",
+  "Republic of Korea":"South Korea","Dem. Rep. Korea":"North Korea","United Republic of Tanzania":"Tanzania"
+};
+const aliasMap = new Map(Object.entries(rawAliases).map(([k,v])=>[norm(k),v]));
+function lookup(featureName){
+  const a = aliasMap.get(norm(featureName));
+  return byCountry.get(norm(a||featureName));
+}
+
+let mapG, mapPaths, colorScale, projection, pathGen, zoomB;
+const mapW=1000, mapH=520;
+
+function buildScale(){
+  const m=state.metric, cfg=METRICS[m];
+  colorScale = d3.scaleSequential(d3.piecewise(d3.interpolateRgb.gamma(2.2), cfg.ramp)).domain([0, maxOf(m)]);
+  return colorScale;
+}
+function countryFill(d){
+  const rec = d.__rec;
+  if(!rec) return 'rgba(255,255,255,0.045)';
+  return colorScale(rec[state.metric]);
+}
+function applyFilter(){
+  const m=state.metric, max=maxOf(m), thr=state.minPct/100*max, q=state.search.trim();
+  mapPaths.classed('dim', d=>{
+    const r=d.__rec; if(!r) return q!=='';
+    if(r[m] < thr) return true;
+    if(q && norm(r.country).indexOf(norm(q))===-1) return true;
+    return false;
+  }).classed('match', d=>{
+    const r=d.__rec; return q && r && norm(r.country).indexOf(norm(q))!==-1;
+  });
+}
+function recolorMap(){
+  buildScale();
+  mapPaths.transition().duration(600).attr('fill', countryFill);
+  applyFilter();
+  buildLegend();
+}
+function tooltipHTML(rec){
+  const m=state.metric, cfg=METRICS[m], max=maxOf(m);
+  const cat = CATS[state.category];
+  const rank = DATA.slice().sort((a,b)=>b[m]-a[m]).findIndex(d=>d.country===rec.country)+1;
+  const pct = max? (rec[m]/max*100):0;
+  const parts = cat.parts;
+  const maxServ=Math.max(...parts.map(k=>rec[k]),1);
+  let breaks = parts.map(k=>{const c=METRICS[k];return `
+    <div class="tt-line"><span class="k" style="background:${c.color}"></span>
+      <span class="n">${c.label}</span>
+      <span class="track"><span class="fill" style="width:${rec[k]/maxServ*100}%;background:${c.color}"></span></span>
+      <span class="v">${rec[k]}</span></div>`;}).join('');
+  const totalCfg = METRICS[cat.totalKey];
+  const totalTxt = totalCfg.fmt(rec[cat.totalKey])+totalCfg.unit;
+  return `
+    <div class="tt-name">${rec.country}<span class="tt-rank">#${rank} / ${DATA.length}</span></div>
+    <div class="tt-big">${cfg.fmt(rec[m])}${cfg.unit} <span style="font-size:12px;color:var(--txt-dim);font-weight:600">${cfg.label}</span></div>
+    <div class="tt-pct">Representa <b>${pct.toFixed(1)}%</b> do maior consumo mundial · ${totalCfg.label}: <b style="color:${totalCfg.color}">${totalTxt}</b></div>
+    <div class="tt-break">${breaks}</div>`;
+}
+function moveTT(ev){
+  const pad=16, w=tt.offsetWidth, h=tt.offsetHeight;
+  let x=ev.clientX+pad, y=ev.clientY+pad;
+  if(x+w>innerWidth) x=ev.clientX-w-pad;
+  if(y+h>innerHeight) y=ev.clientY-h-pad;
+  tt.style.left=x+'px'; tt.style.top=y+'px';
+}
+function buildLegend(){
+  const cfg=METRICS[state.metric], max=maxOf(state.metric);
+  const grad=`linear-gradient(90deg,${cfg.ramp.join(',')})`;
+  document.getElementById('legend').innerHTML=`
+    <span class="cap" style="color:${cfg.color}">${cfg.short}</span>
+    <div>
+      <div class="bar" style="background:${grad}"></div>
+      <div class="ticks"><span>0</span><span>${cfg.fmt(max/2)}</span><span>${cfg.fmt(max)}</span></div>
+    </div>`;
+}
+
+function drawMap(world){
+  const countries = topojson.feature(world, world.objects.countries).features
+    .filter(f=>f.properties.name!=='Antarctica');
+  projection = d3.geoNaturalEarth1().fitSize([mapW, mapH], {type:'FeatureCollection',features:countries});
+  pathGen = d3.geoPath(projection);
+  buildScale();
+
+  const svg = d3.select('#map').append('svg')
+    .attr('viewBox',`0 0 ${mapW} ${mapH}`).attr('preserveAspectRatio','xMidYMid meet');
+  const defs=svg.append('defs');
+  const glow=defs.append('filter').attr('id','og').attr('x','-20%').attr('y','-20%').attr('width','140%').attr('height','140%');
+  glow.append('feGaussianBlur').attr('stdDeviation','3').attr('result','b');
+  const fm=glow.append('feMerge');fm.append('feMergeNode').attr('in','b');fm.append('feMergeNode').attr('in','SourceGraphic');
+
+  mapG = svg.append('g');
+  countries.forEach(f=>f.__rec=lookup(f.properties.name));
+  mapPaths = mapG.selectAll('path').data(countries).join('path')
+    .attr('class','country').attr('d',pathGen).attr('fill',countryFill)
+    .attr('opacity',0)
+    .on('mousemove',(ev,d)=>{
+      if(!d.__rec){tt.classList.remove('show');return;}
+      tt.innerHTML=tooltipHTML(d.__rec); tt.classList.add('show'); moveTT(ev);
+    })
+    .on('mouseleave',()=>tt.classList.remove('show'));
+  // staggered reveal
+  mapPaths.transition().duration(700).delay((d,i)=>i*2.2).attr('opacity',1);
+
+  zoomB = d3.zoom().scaleExtent([1,8]).on('zoom',ev=>mapG.attr('transform',ev.transform));
+  svg.call(zoomB).on('dblclick.zoom',null);
+  buildLegend();
+}
+
+function loadMap(){
+  const urls=['https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json',
+              'https://unpkg.com/world-atlas@2/countries-110m.json'];
+  (function tryLoad(i){
+    if(i>=urls.length){
+      document.getElementById('map').innerHTML=
+        '<div class="map-fallback">🌐 Não foi possível carregar a geometria do mapa (sem conexão).<br>'+
+        'Os demais gráficos funcionam normalmente offline. Reabra com internet para ver o mapa coroplético.</div>';
+      return;
+    }
+    d3.json(urls[i]).then(drawMap).catch(()=>tryLoad(i+1));
+  })(0);
+}
+
+/* ============================================================
+   TOP 10
+   ============================================================ */
+function renderTop10(){
+  const m=state.metric, cfg=METRICS[m];
+  const top=DATA.slice().sort((a,b)=>b[m]-a[m]).slice(0,10);
+  const max=top[0][m];
+  document.getElementById('top-sub').textContent=`Ranking por ${cfg.label.toLowerCase()} — top 10 de ${DATA.length} países`;
+  const host=d3.select('#bars');
+  host.html('');
+  const rows=host.selectAll('.brow').data(top).join('div').attr('class','brow');
+  rows.append('div').attr('class','rk').text((d,i)=>i+1);
+  rows.append('div').attr('class','cn').text(d=>d.country);
+  rows.append('div').attr('class','tk').append('div').attr('class','fl')
+      .style('background',`linear-gradient(90deg,${cfg.ramp[1]},${cfg.color})`);
+  rows.append('div').attr('class','vv').style('color',cfg.color).text(d=>cfg.fmt(d[m])+cfg.unit);
+  // animate widths
+  requestAnimationFrame(()=>{
+    host.selectAll('.fl').data(top).style('width',d=>Math.max(3,d[m]/max*100)+'%');
+  });
+}
+
+/* ============================================================
+   CORRELAÇÃO (scatter + OLS + Pearson)
+   ============================================================ */
+function pearson(xs,ys){
+  const n=xs.length, mx=d3.mean(xs), my=d3.mean(ys);
+  let num=0,dx=0,dy=0;
+  for(let i=0;i<n;i++){const a=xs[i]-mx,b=ys[i]-my;num+=a*b;dx+=a*a;dy+=b*b;}
+  return num/Math.sqrt(dx*dy);
+}
+function ols(xs,ys){
+  const n=xs.length, mx=d3.mean(xs), my=d3.mean(ys);
+  let num=0,den=0;
+  for(let i=0;i<n;i++){num+=(xs[i]-mx)*(ys[i]-my);den+=(xs[i]-mx)**2;}
+  const b=num/den, a=my-b*mx; return {a,b};
+}
+let scSvg, scState='beer';
+function renderCorrCards(){
+  const host=document.getElementById('corr-cards');
+  const cat=CATS[state.category];
+  host.innerHTML=cat.parts.map(k=>{
+    const r=pearson(DATA.map(d=>d[k]),DATA.map(d=>d[cat.totalKey]));
+    const strength = Math.abs(r)>0.8?'muito forte':Math.abs(r)>0.6?'forte':Math.abs(r)>0.4?'moderada':'fraca';
+    return `<div class="ccard" style="border-color:${scState===k?METRICS[k].color:'var(--stroke)'}">
+      <div class="r" style="color:${METRICS[k].color}">${r.toFixed(2)}</div>
+      <div class="l">r · ${METRICS[k].label}</div><div class="s">correlação ${strength}</div></div>`;
+  }).join('');
+}
+function renderScatter(){
+  const cat=CATS[state.category];
+  const k=scState, cfg=METRICS[k], totalCfg=METRICS[cat.totalKey];
+  document.getElementById('corr-total-label').textContent = totalCfg.label;
+  const W=520,H=300,mL=44,mR=16,mT=14,mB=40, iw=W-mL-mR, ih=H-mT-mB;
+  d3.select('#scatter').html('');
+  scSvg=d3.select('#scatter').append('svg').attr('viewBox',`0 0 ${W} ${H}`).style('width','100%').style('height','auto');
+  const g=scSvg.append('g').attr('transform',`translate(${mL},${mT})`);
+  const x=d3.scaleLinear().domain([0,d3.max(DATA,d=>d[k])*1.05]).range([0,iw]);
+  const y=d3.scaleLinear().domain([0,d3.max(DATA,d=>d[cat.totalKey])*1.05]).range([ih,0]);
+  // grid
+  g.append('g').attr('class','grid-l').call(d3.axisLeft(y).ticks(5).tickSize(-iw).tickFormat('')).select('.domain').remove();
+  g.append('g').attr('class','axis').attr('transform',`translate(0,${ih})`).call(d3.axisBottom(x).ticks(6));
+  g.append('g').attr('class','axis').call(d3.axisLeft(y).ticks(5));
+  g.append('text').attr('x',iw/2).attr('y',ih+34).attr('text-anchor','middle').attr('fill','var(--txt-faint)').attr('font-size',11).text(cfg.short);
+  g.append('text').attr('transform','rotate(-90)').attr('x',-ih/2).attr('y',-34).attr('text-anchor','middle').attr('fill','var(--txt-faint)').attr('font-size',11).text(totalCfg.short);
+  // points
+  g.selectAll('circle').data(DATA).join('circle').attr('class','dotc')
+    .attr('cx',d=>x(d[k])).attr('cy',d=>y(d[cat.totalKey])).attr('r',0)
+    .attr('fill',cfg.color).attr('fill-opacity',.6).attr('stroke','none')
+    .on('mousemove',(ev,d)=>{tt.innerHTML=`<div class="tt-name">${d.country}</div>
+        <div style="font-size:12px;color:var(--txt-dim);margin-top:4px">${cfg.label}: <b style="color:${cfg.color}">${d[k]}</b> · ${totalCfg.label}: <b style="color:${totalCfg.color}">${d[cat.totalKey]}${totalCfg.unit}</b></div>`;
+        tt.classList.add('show');moveTT(ev);})
+    .on('mouseleave',()=>tt.classList.remove('show'))
+    .transition().duration(700).delay((d,i)=>i*3).attr('r',4.5);
+  // regression line
+  const {a,b}=ols(DATA.map(d=>d[k]),DATA.map(d=>d[cat.totalKey]));
+  const xr=[0,d3.max(DATA,d=>d[k])];
+  const line=g.append('line').attr('x1',x(xr[0])).attr('y1',y(a+b*xr[0]))
+    .attr('x2',x(xr[0])).attr('y2',y(a+b*xr[0]))
+    .attr('stroke',cfg.color).attr('stroke-width',2.5).attr('stroke-dasharray','2 0').style('filter','drop-shadow(0 0 4px '+cfg.color+')');
+  line.transition().delay(500).duration(800).attr('x2',x(xr[1])).attr('y2',y(a+b*xr[1]));
+  const r=pearson(DATA.map(d=>d[k]),DATA.map(d=>d[cat.totalKey]));
+  g.append('text').attr('x',iw-6).attr('y',14).attr('text-anchor','end').attr('fill',cfg.color).attr('font-size',13).attr('font-weight',800)
+    .text(`r = ${r.toFixed(2)}  ·  R² = ${(r*r).toFixed(2)}`);
+  renderCorrCards();
+}
+
+/* ============================================================
+   REGRESSÃO LINEAR — previsão de cerveja (maior consumidor)
+   ============================================================ */
+function seeded(s){return()=>{s=(s*9301+49297)%233280;return s/233280;};}
+function buildForecast(){
+  const champ=topBy('beer');                 // Namíbia (376)
+  const annual=champ.beer;                   // porções/ano per capita
+  const base=annual/12;                      // média mensal
+  const rnd=seeded(4237);
+  const trend=0.021;                         // +2.1% ao mês (tendência de alta)
+  const months=[];
+  const now=new Date(2026,6,1);              // referência: jul/2026
+  // 12 meses históricos: jul/2025 .. jun/2026
+  for(let i=0;i<12;i++){
+    const dt=new Date(2026,6-12+i,1);
+    const seasonal=Math.sin((i/12)*2*Math.PI)*base*0.045;
+    const noise=(rnd()-0.5)*base*0.05;
+    const v=base*(1+trend*i)+seasonal+noise;
+    months.push({i,label:dt.toLocaleDateString('pt-BR',{month:'short'}).replace('.','')+'/'+String(dt.getFullYear()).slice(2),value:Math.max(0,v),fc:false});
+  }
+  const xs=months.map(m=>m.i), ys=months.map(m=>m.value);
+  const {a,b}=ols(xs,ys);
+  const yhat=xs.map(x=>a+b*x);
+  const ssRes=d3.sum(ys.map((y,i)=>(y-yhat[i])**2));
+  const ssTot=d3.sum(ys.map(y=>(y-d3.mean(ys))**2));
+  const R2=1-ssRes/ssTot;
+  // 3 meses de previsão: jul, ago, set /2026
+  const fc=[];
+  for(let k=12;k<15;k++){
+    const dt=new Date(2026,6+(k-12),1);
+    fc.push({i:k,label:dt.toLocaleDateString('pt-BR',{month:'short'}).replace('.','')+'/'+String(dt.getFullYear()).slice(2),value:a+b*k,fc:true});
+  }
+  drawForecast(champ,months,fc,{a,b},R2,annual);
+}
+function drawForecast(champ,hist,fc,reg,R2,annual){
+  document.getElementById('fc-sub').innerHTML=
+    `Maior consumidor de cerveja do mundo: <b style="color:var(--beer)">🏆 ${champ.country}</b> (${annual} porções/ano). `+
+    `Série mensal modelada a partir do valor anual, com reta OLS projetando os próximos 3 meses.`;
+  const all=hist.concat(fc);
+  const W=980,H=340,mL=48,mR=20,mT=18,mB=42,iw=W-mL-mR,ih=H-mT-mB;
+  d3.select('#forecast').html('');
+  const svg=d3.select('#forecast').append('svg').attr('viewBox',`0 0 ${W} ${H}`).style('width','100%').style('height','auto');
+  const defs=svg.append('defs');
+  const ag=defs.append('linearGradient').attr('id','fcArea').attr('x1',0).attr('y1',0).attr('x2',0).attr('y2',1);
+  ag.append('stop').attr('offset','0%').attr('stop-color','var(--beer)').attr('stop-opacity',.45);
+  ag.append('stop').attr('offset','100%').attr('stop-color','var(--beer)').attr('stop-opacity',0);
+  const g=svg.append('g').attr('transform',`translate(${mL},${mT})`);
+  const x=d3.scalePoint().domain(all.map(d=>d.label)).range([0,iw]).padding(.5);
+  const y=d3.scaleLinear().domain([d3.min(all,d=>d.value)*0.9,d3.max(all,d=>d.value)*1.08]).range([ih,0]).nice();
+  g.append('g').attr('class','grid-l').call(d3.axisLeft(y).ticks(5).tickSize(-iw).tickFormat('')).select('.domain').remove();
+  g.append('g').attr('class','axis').attr('transform',`translate(0,${ih})`).call(d3.axisBottom(x));
+  g.append('g').attr('class','axis').call(d3.axisLeft(y).ticks(5));
+  g.append('text').attr('transform','rotate(-90)').attr('x',-ih/2).attr('y',-36).attr('text-anchor','middle').attr('fill','var(--txt-faint)').attr('font-size',11).text('Porções de cerveja (mensal)');
+
+  // forecast band (light)
+  const bandX=x(fc[0].label)-(x(all[1].label)-x(all[0].label))/2;
+  g.append('rect').attr('x',bandX).attr('y',0).attr('width',iw-bandX).attr('height',ih)
+    .attr('fill','var(--spirit)').attr('opacity',.06);
+  g.append('text').attr('x',(bandX+iw)/2).attr('y',14).attr('text-anchor','middle').attr('fill','var(--spirit)').attr('font-size',10.5).attr('font-weight',700).attr('opacity',.8).text('PREVISÃO');
+
+  const lineGen=d3.line().x(d=>x(d.label)).y(d=>y(d.value)).curve(d3.curveMonotoneX);
+  const areaGen=d3.area().x(d=>x(d.label)).y0(ih).y1(d=>y(d.value)).curve(d3.curveMonotoneX);
+  // area + historical line
+  g.append('path').datum(hist).attr('fill','url(#fcArea)').attr('d',areaGen).attr('opacity',0).transition().duration(900).attr('opacity',1);
+  const hp=g.append('path').datum(hist).attr('fill','none').attr('stroke','var(--beer)').attr('stroke-width',3).attr('d',lineGen).style('filter','drop-shadow(0 3px 6px rgba(255,176,31,.4))');
+  const L=hp.node().getTotalLength();
+  hp.attr('stroke-dasharray',L).attr('stroke-dashoffset',L).transition().duration(1400).ease(d3.easeCubicInOut).attr('stroke-dashoffset',0);
+
+  // OLS trend line across whole range
+  const xr=[all[0].i,all[all.length-1].i];
+  const trendPts=xr.map(i=>({label:all.find(d=>d.i===i).label,value:reg.a+reg.b*i}));
+  g.append('line').attr('x1',x(trendPts[0].label)).attr('y1',y(trendPts[0].value))
+    .attr('x2',x(trendPts[0].label)).attr('y2',y(trendPts[0].value))
+    .attr('stroke','var(--gold)').attr('stroke-width',2).attr('opacity',.85)
+    .transition().delay(700).duration(900).attr('x2',x(trendPts[1].label)).attr('y2',y(trendPts[1].value));
+
+  // forecast dashed line (connect last hist -> fc)
+  const fcLine=[hist[hist.length-1]].concat(fc);
+  const fp=g.append('path').datum(fcLine).attr('fill','none').attr('stroke','var(--spirit)').attr('stroke-width',3).attr('stroke-dasharray','7 5').attr('d',lineGen).attr('opacity',0);
+  fp.transition().delay(1400).duration(600).attr('opacity',1);
+
+  // points
+  g.selectAll('.pt').data(all).join('circle').attr('class','pt')
+    .attr('cx',d=>x(d.label)).attr('cy',d=>y(d.value)).attr('r',0)
+    .attr('fill',d=>d.fc?'var(--spirit)':'var(--beer)').attr('stroke','#120c1e').attr('stroke-width',2)
+    .on('mousemove',(ev,d)=>{tt.innerHTML=`<div class="tt-name">${d.label}${d.fc?' · previsão':''}</div>
+      <div style="font-size:12px;color:var(--txt-dim);margin-top:4px">Consumo: <b style="color:${d.fc?'var(--spirit)':'var(--beer)'}">${d.value.toFixed(1)}</b> porções</div>`;
+      tt.classList.add('show');moveTT(ev);})
+    .on('mouseleave',()=>tt.classList.remove('show'))
+    .transition().delay((d,i)=>500+i*70).duration(400).attr('r',d=>d.fc?5.5:4.5);
+
+  // stats
+  const growth=(fc[2].value-hist[hist.length-1].value)/hist[hist.length-1].value*100;
+  const monthly=reg.b;
+  document.getElementById('fc-stats').innerHTML=`
+    <div class="fc-stat"><div class="v">${fc.map(f=>f.value.toFixed(1)).join(' → ')}</div><div class="l">Previsão jul → set / 2026 (porções)</div></div>
+    <div class="fc-stat"><div class="v">${monthly>=0?'+':''}${monthly.toFixed(2)}</div><div class="l">Inclinação (β) · porções por mês</div></div>
+    <div class="fc-stat"><div class="v">${(R2).toFixed(3)}</div><div class="l">R² do ajuste linear</div></div>
+    <div class="fc-stat"><div class="v">${growth>=0?'+':''}${growth.toFixed(1)}%</div><div class="l">Variação projetada em 3 meses</div></div>`;
+  document.getElementById('fc-note').innerHTML=
+    `⚠️ <b>Nota metodológica:</b> o dataset é um retrato (consumo per capita anual), sem histórico temporal. `+
+    `Para a previsão, a série mensal de ${champ.country} foi <b>modelada</b> a partir do valor anual (tendência + sazonalidade determinística) e a reta OLS projeta os próximos 3 meses. `+
+    `Trata-se de uma projeção ilustrativa da técnica de regressão linear, não de dados observados.`;
+}
+
+/* ============================================================
+   CONTROLES / EVENTOS
+   ============================================================ */
+function renderMetricSeg(){
+  const cat=CATS[state.category];
+  const keys=[cat.totalKey,...cat.parts];
+  state.metric = cat.totalKey;
+  document.getElementById('metric-seg').innerHTML = keys.map(k=>{
+    const cfg=METRICS[k];
+    return `<button data-m="${k}" class="${k===state.metric?'on':''}" style="--acc:${cfg.color}"><span class="sw" style="background:${cfg.color}"></span>${cfg.label}</button>`;
+  }).join('');
+}
+function renderCorrSeg(){
+  const cat=CATS[state.category];
+  scState = cat.parts[0];
+  document.getElementById('corr-seg').innerHTML = cat.parts.map(k=>{
+    const cfg=METRICS[k];
+    return `<button data-d="${k}" class="${k===scState?'on':''}" style="--acc:${cfg.color}"><span class="sw" style="background:${cfg.color}"></span>${cfg.label}</button>`;
+  }).join('');
+}
+document.getElementById('metric-seg').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b)return;
+  document.querySelectorAll('#metric-seg button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); state.metric=b.dataset.m;
+  if(mapPaths) recolorMap();
+  renderTop10();
+});
+const minr=document.getElementById('minr'), minout=document.getElementById('minout');
+minr.addEventListener('input',()=>{state.minPct=+minr.value;minout.textContent=minr.value+'%';if(mapPaths)applyFilter();});
+document.getElementById('csearch').addEventListener('input',e=>{state.search=e.target.value;if(mapPaths)applyFilter();});
+document.getElementById('corr-seg').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b)return;
+  document.querySelectorAll('#corr-seg button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); scState=b.dataset.d; renderScatter();
+});
+document.getElementById('category-seg').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b)return;
+  document.querySelectorAll('#category-seg button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); state.category=b.dataset.c;
+  renderMetricSeg(); renderCorrSeg();
+  initKPIs(); renderTop10(); renderScatter();
+  if(mapPaths) recolorMap();
+});
+
+/* ============================================================
+   NOTIFICAÇÕES (toast flutuante)
+   ============================================================ */
+function showToast(type,msg,title){
+  const stack=document.getElementById('toastStack');
+  const el=document.createElement('div');
+  el.className='toast '+type;
+  const ic = type==='success' ? '✅' : type==='error' ? '⚠️' : 'ℹ️';
+  const defTitle = type==='success' ? 'Dashboard atualizado' : type==='error' ? 'Falha ao importar' : 'Aviso';
+  el.innerHTML = `<div class="ic">${ic}</div>
+    <div class="body"><div class="ttl">${title||defTitle}</div><div class="msg">${msg}</div></div>
+    <button class="close" aria-label="Fechar">✕</button>
+    <div class="prog"></div>`;
+  stack.appendChild(el);
+  requestAnimationFrame(()=>el.classList.add('show'));
+  const dur=4500;
+  const prog=el.querySelector('.prog');
+  requestAnimationFrame(()=>{prog.style.transition=`width ${dur}ms linear`;prog.style.width='0%';});
+  const timer=setTimeout(dismiss,dur);
+  function dismiss(){
+    clearTimeout(timer);
+    el.classList.remove('show'); el.classList.add('hide');
+    setTimeout(()=>el.remove(),450);
+  }
+  el.querySelector('.close').addEventListener('click',dismiss);
+}
+
+/* ============================================================
+   IMPORTAÇÃO DE NOVO CSV — atualiza todo o painel
+   ============================================================ */
+let sourceAlcName='drinks.csv', sourceNaName='drinks_2.csv';
+function updateDatasetMeta(){
+  document.getElementById('datasetInfo').innerHTML=`<b>${DATA.length}</b> países carregados`;
+  document.getElementById('datasetSource').textContent=`${sourceAlcName} + ${sourceNaName}`;
+}
+function refreshAll(){
+  mergeData();
+  initKPIs();
+  renderTop10();
+  renderScatter();
+  buildForecast();
+  updateDatasetMeta();
+  if(mapPaths){
+    mapPaths.each(function(d){ d.__rec = lookup(d.properties.name); });
+    recolorMap();
+  }
+}
+document.getElementById('csvAlc').addEventListener('change', e=>{
+  const file=e.target.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const newData=parseDrinksCSV(ev.target.result);
+      ALC=newData;
+      sourceAlcName=file.name;
+      refreshAll();
+      const skippedTxt = newData.__skipped ? ` (${newData.__skipped} linha(s) ignorada(s) por dados inválidos)` : '';
+      showToast('success', `"${file.name}" importado com sucesso — ${ALC.length} países de bebidas alcoólicas atualizados.${skippedTxt}`);
+    }catch(err){
+      showToast('error', err.message || 'Não foi possível processar o arquivo CSV.');
+    }
+    e.target.value='';
+  };
+  reader.onerror=()=>showToast('error','Não foi possível ler o arquivo selecionado.');
+  reader.readAsText(file,'UTF-8');
+});
+document.getElementById('csvNonAlc').addEventListener('change', e=>{
+  const file=e.target.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const newData=parseNonAlcCSV(ev.target.result);
+      NONALC=newData;
+      sourceNaName=file.name;
+      refreshAll();
+      const skippedTxt = newData.__skipped ? ` (${newData.__skipped} linha(s) ignorada(s) por dados inválidos)` : '';
+      showToast('success', `"${file.name}" importado com sucesso — ${NONALC.length} países de bebidas não alcoólicas atualizados.${skippedTxt}`);
+    }catch(err){
+      showToast('error', err.message || 'Não foi possível processar o arquivo CSV.');
+    }
+    e.target.value='';
+  };
+  reader.onerror=()=>showToast('error','Não foi possível ler o arquivo selecionado.');
+  reader.readAsText(file,'UTF-8');
+});
+
+/* ============================================================
+   INIT
+   ============================================================ */
+updateDatasetMeta();
+renderMetricSeg();
+renderCorrSeg();
+initKPIs();
+renderTop10();
+renderScatter();
+buildForecast();
+loadMap();
+</script>
+</body>
+</html>
