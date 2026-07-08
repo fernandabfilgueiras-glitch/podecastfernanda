@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Conexões — o podcast de Fernanda Filgueiras</title>
+<meta name="description" content="Conexões é um podcast de Fernanda Filgueiras sobre pessoas que enxergam o mundo de um jeito interessante. Conversas profundas, leves e humanas sobre decisão, criatividade, performance, ciência e propósito." />
+<meta name="author" content="Fernanda Filgueiras" />
+<meta name="theme-color" content="#e15215" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Conexões" />
+<meta property="og:title" content="Conexões — o podcast de Fernanda Filgueiras" />
+<meta property="og:description" content="As melhores respostas começam com uma boa pergunta. Conversas profundas, leves e humanas com quem enxerga o mundo de um jeito diferente." />
+<meta property="og:image" content="fernanda_capa.png" />
+<meta property="og:locale" content="pt_BR" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Conexões — o podcast de Fernanda Filgueiras" />
+<meta name="twitter:description" content="As melhores respostas começam com uma boa pergunta." />
+<meta name="twitter:image" content="fernanda_capa.png" />
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23e15215'/><text x='50' y='70' font-size='62' font-family='Georgia,serif' text-anchor='middle' fill='%23F4EFE6'>C</text></svg>" />
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Raleway:ital,wght@0,300..800;1,400..600&display=swap" rel="stylesheet" />
+
+<!-- Schema.org PodcastSeries -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "PodcastSeries",
+  "name": "Conexões",
+  "description": "Podcast de Fernanda Filgueiras com conversas profundas, leves e humanas sobre pessoas que enxergam o mundo de um jeito interessante.",
+  "url": "https://conexoes.fernandafilgueiras.com",
+  "image": "fernanda_capa.png",
+  "author": { "@type": "Person", "name": "Fernanda Filgueiras", "jobTitle": "Head de Marketing e Comunicação" },
+  "inLanguage": "pt-BR",
+  "genre": ["Society & Culture", "Business", "Science"]
+}
+</script>
+
+<style>
+/* ============================================================
+   CONEXÕES · Fernanda Filgueiras
+   Paleta e tipografia derivadas do Brand Book oficial.
+   ============================================================ */
+
+/* ---------- Tokens ---------- */
+:root{
+  /* Cores da marca (Brand Book) */
+  --orange:#e15215;
+  --orange-deep:#c8410b;
+  --ochre:#d1762b;
+  --green:#3a6149;
+  --brown:#4e2821;
+  --ink:#222623;
+
+  /* Tema claro (creme editorial) */
+  --bg:#F4EFE6;
+  --bg-soft:#EDE6D8;
+  --bg-elevated:#FBF8F1;
+  --text:#222623;
+  --text-soft:#5a564d;
+  --text-mute:#8a8478;
+  --line:rgba(34,38,35,.12);
+  --line-strong:rgba(34,38,35,.22);
+  --accent:var(--orange);
+  --accent-2:var(--green);
+  --card:#FBF8F1;
+  --shadow:0 1px 2px rgba(34,38,35,.04), 0 18px 50px -24px rgba(34,38,35,.22);
+  --shadow-lift:0 1px 2px rgba(34,38,35,.05), 0 40px 80px -32px rgba(34,38,35,.35);
+  --overlay:rgba(244,239,230,.72);
+
+  --font-display:'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-sans:'Raleway', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --maxw:1200px;
+  --gutter:clamp(20px, 5vw, 64px);
+  --radius:18px;
+  --radius-lg:26px;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+
+[data-theme="dark"]{
+  --bg:#191c1a;
+  --bg-soft:#1f231f;
+  --bg-elevated:#23272400;
+  --text:#F1ECE1;
+  --text-soft:#c3bfb2;
+  --text-mute:#8f8a7d;
+  --line:rgba(241,236,225,.12);
+  --line-strong:rgba(241,236,225,.22);
+  --card:#22262300;
+  --card:#232724;
+  --bg-elevated:#232724;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 24px 60px -28px rgba(0,0,0,.8);
+  --shadow-lift:0 1px 2px rgba(0,0,0,.4), 0 50px 90px -30px rgba(0,0,0,.9);
+  --overlay:rgba(25,28,26,.72);
+}
+
+/* ---------- Reset ---------- */
+*,*::before,*::after{box-sizing:border-box}
+*{margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  font-family:var(--font-sans);
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  font-weight:400;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+  transition:background .6s var(--ease), color .6s var(--ease);
+}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+::selection{background:var(--orange);color:#fff}
+
+/* ---------- Utilities ---------- */
+.wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--gutter)}
+.eyebrow{
+  font-size:.74rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--accent);display:inline-flex;align-items:center;gap:.6em;
+}
+.eyebrow::before{content:"";width:26px;height:1px;background:var(--accent);display:inline-block;opacity:.7}
+.serif{font-family:var(--font-display)}
+
+/* Reveal on scroll */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .9s var(--ease), transform .9s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+.reveal[data-delay="1"]{transition-delay:.08s}
+.reveal[data-delay="2"]{transition-delay:.16s}
+.reveal[data-delay="3"]{transition-delay:.24s}
+.reveal[data-delay="4"]{transition-delay:.32s}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+
+/* Buttons */
+.btn{
+  display:inline-flex;align-items:center;gap:.6em;
+  font-weight:600;font-size:.95rem;letter-spacing:.01em;
+  padding:.92em 1.5em;border-radius:100px;
+  transition:transform .4s var(--ease), background .3s var(--ease), color .3s var(--ease), box-shadow .3s var(--ease);
+  will-change:transform;
+}
+.btn svg{width:16px;height:16px}
+.btn-primary{background:var(--ink);color:var(--bg);}
+[data-theme="dark"] .btn-primary{background:var(--orange);color:#fff}
+.btn-primary:hover{background:var(--orange);color:#fff;transform:translateY(-2px)}
+.btn-ghost{border:1px solid var(--line-strong);color:var(--text)}
+.btn-ghost:hover{border-color:var(--text);transform:translateY(-2px)}
+.btn-accent{background:var(--orange);color:#fff}
+.btn-accent:hover{background:var(--orange-deep);transform:translateY(-2px)}
+
+/* Section rhythm */
+section{position:relative}
+.section-pad{padding-block:clamp(72px,11vw,150px)}
+.section-head{max-width:720px;margin-bottom:clamp(38px,5vw,64px)}
+.section-head h2{
+  font-family:var(--font-display);font-weight:400;
+  font-size:clamp(2rem,5.2vw,3.6rem);line-height:1.04;letter-spacing:-.02em;
+  margin-top:.5em;
+}
+.section-head p{color:var(--text-soft);font-size:1.12rem;margin-top:1.1em;max-width:56ch}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px var(--gutter);
+  transition:padding .4s var(--ease), background .4s var(--ease), border-color .4s var(--ease), backdrop-filter .4s;
+  border-bottom:1px solid transparent;
+}
+.nav.scrolled{
+  padding-block:12px;
+  background:var(--overlay);
+  backdrop-filter:saturate(180%) blur(18px);
+  -webkit-backdrop-filter:saturate(180%) blur(18px);
+  border-bottom:1px solid var(--line);
+}
+.brand{display:flex;align-items:center;gap:.6em;font-weight:700;letter-spacing:.02em;font-size:1.05rem}
+.brand .mark{
+  width:30px;height:30px;border-radius:9px;background:var(--orange);
+  display:grid;place-items:center;color:#fff;font-family:var(--font-display);font-size:1.1rem;
+  transition:transform .5s var(--ease);
+}
+.brand:hover .mark{transform:rotate(-8deg) scale(1.06)}
+.brand small{color:var(--text-mute);font-weight:500;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;display:block;margin-top:1px}
+.nav-links{display:flex;align-items:center;gap:2px}
+.nav-links a{
+  padding:.5em .9em;font-size:.9rem;font-weight:500;color:var(--text-soft);border-radius:100px;
+  transition:color .3s, background .3s;position:relative;
+}
+.nav-links a:hover{color:var(--text);background:var(--bg-soft)}
+.nav-right{display:flex;align-items:center;gap:12px}
+.theme-toggle{
+  width:38px;height:38px;border-radius:50%;border:1px solid var(--line-strong);
+  display:grid;place-items:center;transition:transform .5s var(--ease), border-color .3s;
+}
+.theme-toggle:hover{transform:rotate(20deg);border-color:var(--text)}
+.theme-toggle svg{width:18px;height:18px}
+.theme-toggle .moon{display:none}
+[data-theme="dark"] .theme-toggle .sun{display:none}
+[data-theme="dark"] .theme-toggle .moon{display:block}
+.menu-btn{display:none;width:38px;height:38px;border-radius:50%;border:1px solid var(--line-strong)}
+.menu-btn span{display:block;width:16px;height:1.6px;background:var(--text);margin:3.5px auto;transition:.35s var(--ease)}
+.nav-cta{display:inline-flex}
+
+/* Mobile menu */
+.mobile-menu{
+  position:fixed;inset:0;z-index:99;background:var(--bg);
+  display:flex;flex-direction:column;justify-content:center;gap:6px;padding:var(--gutter);
+  transform:translateY(-100%);transition:transform .6s var(--ease);
+}
+.mobile-menu.open{transform:none}
+.mobile-menu a{font-family:var(--font-display);font-size:2rem;font-weight:400;padding:.25em 0;color:var(--text);opacity:0;transform:translateY(12px);transition:.5s var(--ease)}
+.mobile-menu.open a{opacity:1;transform:none}
+.mobile-menu.open a:nth-child(1){transition-delay:.1s}
+.mobile-menu.open a:nth-child(2){transition-delay:.16s}
+.mobile-menu.open a:nth-child(3){transition-delay:.22s}
+.mobile-menu.open a:nth-child(4){transition-delay:.28s}
+.mobile-menu.open a:nth-child(5){transition-delay:.34s}
+.mobile-menu.open a:nth-child(6){transition-delay:.4s}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{position:relative;padding-top:clamp(130px,20vh,190px);padding-bottom:clamp(60px,9vw,110px);overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(30px,5vw,70px);align-items:center}
+.hero-tag{margin-bottom:26px}
+.hero h1{
+  font-family:var(--font-display);font-weight:340;
+  font-size:clamp(2.6rem,7vw,5.6rem);line-height:.99;letter-spacing:-.03em;
+}
+.hero h1 em{font-style:italic;color:var(--accent)}
+.hero .lead{
+  margin-top:1.4em;font-size:clamp(1.05rem,1.7vw,1.28rem);color:var(--text-soft);max-width:46ch;line-height:1.55;
+}
+.hero-actions{margin-top:2.4em;display:flex;flex-wrap:wrap;gap:14px}
+.hero-meta{margin-top:2.8em;display:flex;gap:30px;flex-wrap:wrap;align-items:center;color:var(--text-mute);font-size:.82rem}
+.hero-meta .platforms{display:flex;gap:16px;align-items:center}
+.hero-meta .platforms span{display:flex;align-items:center;gap:.4em;font-weight:600;color:var(--text-soft)}
+.hero-meta svg{width:15px;height:15px;opacity:.8}
+
+/* Hero portrait */
+.hero-visual{position:relative}
+.hero-portrait{
+  position:relative;border-radius:var(--radius-lg);overflow:hidden;aspect-ratio:4/5;
+  box-shadow:var(--shadow-lift);transform:rotate(1.5deg);
+}
+.hero-portrait img{width:100%;height:100%;object-fit:cover;object-position:center 18%;transition:transform 1.2s var(--ease)}
+.hero-portrait:hover img{transform:scale(1.04)}
+.hero-badge{
+  position:absolute;left:-22px;bottom:34px;z-index:3;
+  background:var(--bg-elevated);border:1px solid var(--line);border-radius:16px;
+  padding:14px 18px;box-shadow:var(--shadow);display:flex;align-items:center;gap:12px;
+  animation:floaty 6s ease-in-out infinite;
+}
+.hero-badge .dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(58,97,73,.18)}
+.hero-badge b{font-size:.9rem}
+.hero-badge small{display:block;color:var(--text-mute);font-size:.72rem;letter-spacing:.04em}
+.blob{position:absolute;z-index:-1;filter:blur(6px);opacity:.5}
+.blob-1{top:-40px;right:-30px;width:220px;height:220px;background:radial-gradient(circle,var(--orange),transparent 70%)}
+.blob-2{bottom:-30px;left:20px;width:180px;height:180px;background:radial-gradient(circle,var(--green),transparent 70%);opacity:.35}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@media (prefers-reduced-motion:reduce){.hero-badge{animation:none}}
+
+/* Marquee of themes */
+.marquee{border-block:1px solid var(--line);padding-block:20px;overflow:hidden;margin-top:clamp(50px,7vw,90px);-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.marquee-track{display:flex;gap:0;width:max-content;animation:scrollx 42s linear infinite}
+.marquee:hover .marquee-track{animation-play-state:paused}
+.marquee-track span{font-family:var(--font-display);font-size:clamp(1.3rem,2.4vw,1.9rem);color:var(--text-mute);padding:0 1.4rem;display:flex;align-items:center;gap:2.8rem;font-style:italic}
+.marquee-track span::after{content:"✦";font-style:normal;font-size:.7em;color:var(--accent)}
+@keyframes scrollx{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.marquee-track{animation:none}}
+
+/* ============================================================
+   MANIFESTO
+   ============================================================ */
+.manifesto{background:var(--bg-soft);border-block:1px solid var(--line)}
+.manifesto-inner{max-width:900px;margin-inline:auto;text-align:center}
+.manifesto p{
+  font-family:var(--font-display);font-weight:330;
+  font-size:clamp(1.5rem,3.6vw,2.7rem);line-height:1.28;letter-spacing:-.015em;
+}
+.manifesto .hl{color:var(--accent);font-style:italic}
+.manifesto .muted{color:var(--text-mute)}
+.manifesto-sign{margin-top:2.4em;font-family:var(--font-sans);font-size:.92rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text-mute)}
+
+/* ============================================================
+   SOBRE / FERNANDA
+   ============================================================ */
+.about-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(32px,5vw,72px);align-items:center}
+.about-photo{position:relative;border-radius:var(--radius-lg);overflow:hidden;aspect-ratio:3/4;box-shadow:var(--shadow-lift)}
+.about-photo img{width:100%;height:100%;object-fit:cover}
+.about-photo figcaption{position:absolute;left:0;right:0;bottom:0;padding:22px;background:linear-gradient(transparent,rgba(34,38,35,.82));color:#F1ECE1;font-size:.82rem;letter-spacing:.04em}
+.about-body h2{font-family:var(--font-display);font-weight:380;font-size:clamp(1.9rem,4.4vw,3.1rem);line-height:1.06;letter-spacing:-.02em;margin:.5em 0 .7em}
+.about-body p{color:var(--text-soft);font-size:1.08rem;margin-bottom:1.1em;max-width:54ch}
+.about-body p strong{color:var(--text);font-weight:600}
+.about-cred{display:flex;flex-wrap:wrap;gap:10px;margin-top:1.6em}
+.about-cred span{font-size:.82rem;font-weight:600;color:var(--text-soft);border:1px solid var(--line-strong);padding:.5em 1em;border-radius:100px}
+.about-quote{margin-top:2em;padding-left:22px;border-left:2px solid var(--accent);font-family:var(--font-display);font-style:italic;font-size:1.25rem;color:var(--text);line-height:1.4}
+
+/* ============================================================
+   EPISÓDIOS
+   ============================================================ */
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:38px}
+.filter{font-size:.85rem;font-weight:600;color:var(--text-soft);border:1px solid var(--line-strong);padding:.55em 1.15em;border-radius:100px;transition:.3s var(--ease)}
+.filter:hover{border-color:var(--text);color:var(--text)}
+.filter.active{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+[data-theme="dark"] .filter.active{background:var(--orange);border-color:var(--orange);color:#fff}
+
+.ep-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.ep-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;
+  display:flex;flex-direction:column;transition:transform .5s var(--ease), box-shadow .5s var(--ease), border-color .3s;
+  cursor:pointer;
+}
+.ep-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lift);border-color:transparent}
+.ep-thumb{position:relative;aspect-ratio:16/10;overflow:hidden;background:var(--bg-soft)}
+.ep-thumb img{width:100%;height:100%;object-fit:cover;object-position:center 30%;transition:transform 1s var(--ease)}
+.ep-card:hover .ep-thumb img{transform:scale(1.06)}
+.ep-thumb.gradient{display:grid;place-items:center;position:relative}
+.ep-thumb.gradient::before{content:"";position:absolute;inset:0}
+.g1::before{background:linear-gradient(135deg,var(--orange),var(--brown))}
+.g2::before{background:linear-gradient(135deg,var(--green),var(--ink))}
+.g3::before{background:linear-gradient(135deg,var(--ochre),var(--orange-deep))}
+.ep-thumb.gradient .qmark{position:relative;font-family:var(--font-display);font-style:italic;font-size:2.6rem;color:rgba(255,255,255,.92);padding:20px;text-align:center;line-height:1.15}
+.ep-play{
+  position:absolute;right:14px;bottom:14px;width:46px;height:46px;border-radius:50%;
+  background:var(--bg-elevated);display:grid;place-items:center;box-shadow:var(--shadow);
+  transform:scale(.8);opacity:0;transition:.45s var(--ease);
+}
+.ep-card:hover .ep-play{transform:scale(1);opacity:1}
+.ep-play svg{width:16px;height:16px;color:var(--orange);margin-left:2px}
+.ep-tagpill{position:absolute;left:14px;top:14px;background:var(--overlay);backdrop-filter:blur(8px);border:1px solid var(--line);padding:.35em .85em;border-radius:100px;font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text)}
+.ep-info{padding:22px 22px 24px;display:flex;flex-direction:column;flex:1}
+.ep-meta{display:flex;gap:12px;font-size:.76rem;color:var(--text-mute);letter-spacing:.03em;margin-bottom:10px;font-weight:600}
+.ep-info h3{font-family:var(--font-display);font-weight:440;font-size:1.4rem;line-height:1.14;letter-spacing:-.01em;margin-bottom:.5em}
+.ep-info p{font-size:.94rem;color:var(--text-soft);flex:1}
+.ep-guest{margin-top:16px;padding-top:16px;border-top:1px solid var(--line);display:flex;align-items:center;gap:10px;font-size:.85rem}
+.ep-guest .av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--ochre));display:grid;place-items:center;color:#fff;font-size:.78rem;font-weight:700;font-family:var(--font-display)}
+.ep-guest b{font-weight:600}.ep-guest small{color:var(--text-mute)}
+.eps-more{text-align:center;margin-top:44px}
+
+/* ============================================================
+   TEMAS
+   ============================================================ */
+.themes{background:var(--ink);color:#F1ECE1;border-radius:0}
+[data-theme="dark"] .themes{background:#101312;border-block:1px solid var(--line)}
+.themes .eyebrow{color:var(--ochre)}
+.themes .eyebrow::before{background:var(--ochre)}
+.themes h2{color:#F1ECE1}
+.themes-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(241,236,225,.14);border:1px solid rgba(241,236,225,.14);border-radius:var(--radius);overflow:hidden;margin-top:14px}
+.theme-cell{background:var(--ink);padding:30px 24px 34px;min-height:170px;display:flex;flex-direction:column;justify-content:space-between;transition:background .4s var(--ease);cursor:default;position:relative;overflow:hidden}
+[data-theme="dark"] .theme-cell{background:#101312}
+.theme-cell:hover{background:#2b302c}
+[data-theme="dark"] .theme-cell:hover{background:#171b19}
+.theme-cell .num{font-size:.78rem;color:rgba(241,236,225,.4);font-weight:600;letter-spacing:.1em}
+.theme-cell h3{font-family:var(--font-display);font-weight:400;font-size:1.5rem;line-height:1.05;letter-spacing:-.01em}
+.theme-cell .arrow{position:absolute;right:22px;bottom:26px;color:var(--orange);opacity:0;transform:translate(-6px,6px);transition:.45s var(--ease)}
+.theme-cell:hover .arrow{opacity:1;transform:none}
+.theme-cell .arrow svg{width:20px;height:20px}
+
+/* ============================================================
+   CONVIDADOS
+   ============================================================ */
+.guest-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.guest-card{text-align:left;transition:transform .5s var(--ease)}
+.guest-card:hover{transform:translateY(-5px)}
+.guest-av{aspect-ratio:1;border-radius:var(--radius);overflow:hidden;position:relative;margin-bottom:16px;display:grid;place-items:center;box-shadow:var(--shadow)}
+.guest-av .initials{font-family:var(--font-display);font-size:2.8rem;color:rgba(255,255,255,.92);font-weight:400}
+.guest-av::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,.25))}
+.gv1{background:linear-gradient(140deg,var(--orange),var(--brown))}
+.gv2{background:linear-gradient(140deg,var(--green),var(--ink))}
+.gv3{background:linear-gradient(140deg,var(--ochre),var(--orange-deep))}
+.gv4{background:linear-gradient(140deg,var(--brown),var(--green))}
+.guest-card h3{font-family:var(--font-display);font-weight:460;font-size:1.22rem;line-height:1.1}
+.guest-card .role{font-size:.85rem;color:var(--accent);font-weight:600;margin:.25em 0 .6em}
+.guest-card p{font-size:.9rem;color:var(--text-soft);line-height:1.5}
+.guest-card .rel{margin-top:.9em;font-size:.8rem;color:var(--text-mute);font-weight:600;display:inline-flex;align-items:center;gap:.4em}
+.guest-note{margin-top:40px;text-align:center;color:var(--text-mute);font-size:.9rem}
+
+/* ============================================================
+   FRASES EM DESTAQUE
+   ============================================================ */
+.quotes{background:var(--bg-soft);border-block:1px solid var(--line)}
+.quotes-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:26px}
+.quote-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:38px 36px;position:relative;overflow:hidden;transition:transform .5s var(--ease), box-shadow .5s}
+.quote-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.quote-card.big{grid-column:span 2}
+.quote-card .mark{font-family:var(--font-display);font-size:5rem;line-height:.6;color:var(--accent);opacity:.5;height:.4em;display:block}
+.quote-card blockquote{font-family:var(--font-display);font-weight:340;font-size:clamp(1.3rem,2.4vw,1.9rem);line-height:1.28;letter-spacing:-.015em;margin:.2em 0 1em}
+.quote-card.big blockquote{font-size:clamp(1.7rem,3.4vw,2.7rem)}
+.quote-card cite{font-style:normal;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-mute);font-weight:600}
+.quote-card cite b{color:var(--accent)}
+
+/* ============================================================
+   NEWSLETTER
+   ============================================================ */
+.news{position:relative;overflow:hidden}
+.news-card{
+  background:var(--ink);color:#F1ECE1;border-radius:var(--radius-lg);
+  padding:clamp(40px,6vw,80px);position:relative;overflow:hidden;box-shadow:var(--shadow-lift);
+}
+.news-card::before{content:"";position:absolute;top:-120px;right:-80px;width:420px;height:420px;background:radial-gradient(circle,rgba(225,82,21,.55),transparent 65%)}
+.news-card::after{content:"";position:absolute;bottom:-160px;left:-60px;width:380px;height:380px;background:radial-gradient(circle,rgba(58,97,73,.5),transparent 65%)}
+.news-inner{position:relative;max-width:620px}
+.news .eyebrow{color:var(--ochre)}.news .eyebrow::before{background:var(--ochre)}
+.news h2{font-family:var(--font-display);font-weight:360;font-size:clamp(1.9rem,4.6vw,3.2rem);line-height:1.05;letter-spacing:-.02em;margin:.5em 0 .5em}
+.news p{color:rgba(241,236,225,.72);font-size:1.08rem;max-width:48ch}
+.news-form{margin-top:32px;display:flex;gap:12px;flex-wrap:wrap}
+.news-form input{
+  flex:1;min-width:240px;background:rgba(241,236,225,.08);border:1px solid rgba(241,236,225,.2);
+  color:#F1ECE1;padding:.95em 1.3em;border-radius:100px;font-size:.98rem;font-family:inherit;transition:border-color .3s, background .3s;
+}
+.news-form input::placeholder{color:rgba(241,236,225,.45)}
+.news-form input:focus{outline:none;border-color:var(--orange);background:rgba(241,236,225,.12)}
+.news-note{margin-top:16px;font-size:.8rem;color:rgba(241,236,225,.5)}
+.news-ok{margin-top:22px;color:#F1ECE1;font-size:1rem;display:none;align-items:center;gap:.6em}
+.news-ok.show{display:flex}
+.news-ok svg{width:20px;height:20px;color:var(--green);flex:none}
+
+/* ============================================================
+   PATROCINADORES / PARCEIROS
+   ============================================================ */
+.partners-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(32px,5vw,64px);align-items:start}
+.partner-copy h2{font-family:var(--font-display);font-weight:380;font-size:clamp(1.9rem,4.4vw,3rem);line-height:1.06;letter-spacing:-.02em;margin:.5em 0 .7em}
+.partner-copy p{color:var(--text-soft);font-size:1.08rem;max-width:50ch;margin-bottom:1.5em}
+.partner-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:2em 0}
+.stat .n{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,2.6rem);font-weight:420;line-height:1;letter-spacing:-.02em;color:var(--text)}
+.stat .n b{color:var(--accent);font-weight:inherit}
+.stat .l{font-size:.82rem;color:var(--text-mute);margin-top:.5em;letter-spacing:.02em}
+.tiers{display:flex;flex-direction:column;gap:14px}
+.tier{border:1px solid var(--line);background:var(--card);border-radius:var(--radius);padding:24px 26px;transition:border-color .3s, transform .4s var(--ease)}
+.tier:hover{transform:translateX(4px);border-color:var(--accent)}
+.tier .th{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.tier h4{font-family:var(--font-display);font-weight:480;font-size:1.25rem}
+.tier .badge{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);border:1px solid var(--accent);padding:.3em .7em;border-radius:100px}
+.tier p{font-size:.92rem;color:var(--text-soft);margin-top:.6em}
+
+/* ============================================================
+   CONTATO
+   ============================================================ */
+.contact{background:var(--bg-soft);border-top:1px solid var(--line)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,5vw,70px);align-items:center}
+.contact h2{font-family:var(--font-display);font-weight:360;font-size:clamp(2rem,5vw,3.4rem);line-height:1.03;letter-spacing:-.025em}
+.contact p{color:var(--text-soft);font-size:1.1rem;margin-top:1em;max-width:44ch}
+.contact-list{display:flex;flex-direction:column;gap:2px;margin-top:2em}
+.contact-list a{display:flex;align-items:center;justify-content:space-between;padding:20px 4px;border-top:1px solid var(--line);font-size:1.05rem;transition:padding .4s var(--ease), color .3s}
+.contact-list a:last-child{border-bottom:1px solid var(--line)}
+.contact-list a:hover{padding-left:14px;color:var(--accent)}
+.contact-list .lab{display:flex;align-items:center;gap:14px;font-weight:600}
+.contact-list .lab svg{width:18px;height:18px;color:var(--accent)}
+.contact-list .val{color:var(--text-mute);font-size:.9rem;display:flex;align-items:center;gap:8px}
+.contact-list a:hover .val{color:var(--accent)}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer{padding-block:clamp(56px,7vw,84px) 40px}
+.footer-top{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;padding-bottom:48px;border-bottom:1px solid var(--line)}
+.footer-brand .brand{font-size:1.3rem;margin-bottom:18px}
+.footer-brand p{color:var(--text-soft);max-width:34ch;font-size:.96rem}
+.footer-social{display:flex;gap:10px;margin-top:22px}
+.footer-social a{width:40px;height:40px;border-radius:50%;border:1px solid var(--line-strong);display:grid;place-items:center;transition:.4s var(--ease)}
+.footer-social a:hover{background:var(--orange);border-color:var(--orange);color:#fff;transform:translateY(-3px)}
+.footer-social svg{width:17px;height:17px}
+.footer-col h5{font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-mute);margin-bottom:16px;font-weight:700}
+.footer-col a{display:block;padding:.4em 0;color:var(--text-soft);font-size:.95rem;transition:color .3s, padding-left .3s}
+.footer-col a:hover{color:var(--accent);padding-left:5px}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;padding-top:28px;color:var(--text-mute);font-size:.82rem}
+.footer-bottom .made{font-style:italic;font-family:var(--font-display)}
+
+/* ============================================================
+   MODAL / PLAYER
+   ============================================================ */
+.modal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:24px}
+.modal.open{display:flex}
+.modal-backdrop{position:absolute;inset:0;background:rgba(34,38,35,.62);backdrop-filter:blur(6px);opacity:0;transition:opacity .4s}
+.modal.open .modal-backdrop{opacity:1}
+.modal-panel{position:relative;background:var(--bg-elevated);border:1px solid var(--line);border-radius:var(--radius-lg);max-width:620px;width:100%;padding:36px;box-shadow:var(--shadow-lift);transform:translateY(20px) scale(.98);opacity:0;transition:.5s var(--ease);max-height:90vh;overflow:auto}
+.modal.open .modal-panel{transform:none;opacity:1}
+.modal-close{position:absolute;top:18px;right:18px;width:38px;height:38px;border-radius:50%;border:1px solid var(--line-strong);display:grid;place-items:center;transition:.3s}
+.modal-close:hover{background:var(--bg-soft);transform:rotate(90deg)}
+.modal-close svg{width:16px;height:16px}
+.modal .eyebrow{margin-bottom:14px}
+.modal h3{font-family:var(--font-display);font-weight:420;font-size:1.9rem;line-height:1.1;letter-spacing:-.02em;margin-bottom:10px;max-width:90%}
+.modal .m-meta{display:flex;gap:14px;color:var(--text-mute);font-size:.82rem;font-weight:600;margin-bottom:20px}
+.modal p.desc{color:var(--text-soft);margin-bottom:24px}
+.player{aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:var(--ink);display:grid;place-items:center;position:relative;border:1px solid var(--line)}
+.player iframe{width:100%;height:100%;border:0}
+.player .ph{text-align:center;color:rgba(241,236,225,.7);padding:24px}
+.player .ph svg{width:44px;height:44px;color:var(--orange);margin-bottom:10px}
+.player .ph small{display:block;font-size:.8rem;margin-top:6px;color:rgba(241,236,225,.45)}
+.modal-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.plat-btn{display:inline-flex;align-items:center;gap:.5em;font-size:.85rem;font-weight:600;padding:.7em 1.15em;border-radius:100px;border:1px solid var(--line-strong);transition:.3s}
+.plat-btn:hover{border-color:var(--text);transform:translateY(-2px)}
+.plat-btn svg{width:15px;height:15px}
+
+/* Scroll progress */
+.progress{position:fixed;top:0;left:0;height:2.5px;background:var(--orange);z-index:101;width:0;transition:width .1s linear}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:1000px){
+  .nav-links{display:none}
+  .nav-cta{display:none}
+  .menu-btn{display:block}
+  .hero-grid{grid-template-columns:1fr;gap:44px}
+  .hero-visual{max-width:420px;margin-inline:auto;width:100%}
+  .about-grid,.contact-grid,.partners-grid{grid-template-columns:1fr}
+  .about-photo{max-width:440px}
+  .ep-grid{grid-template-columns:repeat(2,1fr)}
+  .themes-grid{grid-template-columns:repeat(2,1fr)}
+  .guest-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-top{grid-template-columns:1fr 1fr;gap:32px}
+  .footer-brand{grid-column:1/-1}
+}
+@media (max-width:620px){
+  .ep-grid,.guest-grid,.quotes-grid{grid-template-columns:1fr}
+  .quote-card.big{grid-column:span 1}
+  .partner-stats{grid-template-columns:1fr;gap:12px;text-align:left}
+  .stat{display:flex;align-items:baseline;gap:14px}
+  .stat .l{margin-top:0}
+  .hero-actions .btn{flex:1;justify-content:center}
+  .footer-top{grid-template-columns:1fr}
+  .modal-panel{padding:26px 22px}
+  .news-form input{min-width:100%}
+}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<!-- ===================== NAV ===================== -->
+<header class="nav" id="nav">
+  <a href="#top" class="brand" aria-label="Conexões — início">
+    <span class="mark">C</span>
+    <span>Conexões<small>Fernanda Filgueiras</small></span>
+  </a>
+  <nav class="nav-links" aria-label="Navegação principal">
+    <a href="#sobre">O projeto</a>
+    <a href="#fernanda">Fernanda</a>
+    <a href="#episodios">Episódios</a>
+    <a href="#temas">Temas</a>
+    <a href="#convidados">Convidados</a>
+    <a href="#parceiros">Parceiros</a>
+  </nav>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema claro/escuro">
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8 6 18M18 6l1.8-1.8" stroke-linecap="round"/></svg>
+      <svg class="moon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+    </button>
+    <a href="#newsletter" class="btn btn-primary nav-cta">Assinar</a>
+    <button class="menu-btn" id="menuBtn" aria-label="Abrir menu"><span></span><span></span></button>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#sobre">O projeto</a>
+  <a href="#fernanda">Fernanda</a>
+  <a href="#episodios">Episódios</a>
+  <a href="#temas">Temas</a>
+  <a href="#convidados">Convidados</a>
+  <a href="#parceiros">Parceiros</a>
+</div>
+
+<main id="top">
+
+<!-- ===================== HERO ===================== -->
+<section class="hero wrap">
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <div class="hero-tag reveal"><span class="eyebrow">Um podcast de Fernanda Filgueiras</span></div>
+      <h1 class="reveal" data-delay="1">As melhores<br>respostas começam<br>com uma <em>boa pergunta.</em></h1>
+      <p class="lead reveal" data-delay="2">Conversas profundas, leves e humanas com pessoas que enxergam o mundo de um jeito interessante. Não pela fama — pela forma de pensar.</p>
+      <div class="hero-actions reveal" data-delay="3">
+        <button class="btn btn-primary" data-open-ep="0">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          Assistir episódio
+        </button>
+        <a href="#sobre" class="btn btn-ghost">Conheça o projeto</a>
+      </div>
+      <div class="hero-meta reveal" data-delay="4">
+        <div class="platforms">
+          <span><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="11" fill="#1DB954"/><path d="M17 16.2c-.2.3-.6.4-.9.2-2.5-1.5-5.6-1.9-9.3-1-.4.1-.7-.1-.8-.5-.1-.4.1-.7.5-.8 4-.9 7.5-.5 10.3 1.2.3.2.4.6.2.9zm1.3-3c-.3.4-.7.5-1.1.3-2.8-1.7-7.1-2.2-10.5-1.2-.4.1-.9-.1-1-.6-.1-.4.1-.9.6-1 3.8-1.1 8.6-.6 11.8 1.4.3.2.5.7.2 1.1zm.1-3.1C15.1 5.1 8.9 4.9 5.5 5.9c-.5.2-1.1-.1-1.3-.6-.2-.5.1-1.1.6-1.3C8.7 2.8 15.5 3 19.6 5.4c.5.3.6.9.4 1.4-.3.4-.9.6-1.5.3z" fill="#fff"/></svg>Spotify</span>
+          <span><svg viewBox="0 0 24 24" fill="#FF0000"><path d="M23 12s0-3.7-.5-5.5a2.8 2.8 0 0 0-2-2C18.7 4 12 4 12 4s-6.7 0-8.5.5a2.8 2.8 0 0 0-2 2C1 8.3 1 12 1 12s0 3.7.5 5.5a2.8 2.8 0 0 0 2 2C5.3 20 12 20 12 20s6.7 0 8.5-.5a2.8 2.8 0 0 0 2-2C23 15.7 23 12 23 12zM10 15.5v-7l6 3.5z"/></svg>YouTube</span>
+          <span><svg viewBox="0 0 24 24" fill="#9933CC"><circle cx="12" cy="12" r="11"/><path d="M12 7a5 5 0 0 0-2 9.6l1-3.1a2 2 0 1 1 2 0l1 3.1A5 5 0 0 0 12 7zm0 6.5 2 5.5h-4z" fill="#fff"/></svg>Apple</span>
+        </div>
+        <span>Novos episódios quinzenais</span>
+      </div>
+    </div>
+
+    <div class="hero-visual reveal" data-delay="2">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="hero-portrait">
+        <img src="fernanda_capa.png" alt="Fernanda Filgueiras, apresentadora do podcast Conexões" />
+      </div>
+      <div class="hero-badge">
+        <span class="dot"></span>
+        <div><b>No ar agora</b><small>EP.01 · Conexões</small></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Marquee -->
+  <div class="marquee reveal" aria-hidden="true">
+    <div class="marquee-track">
+      <span>Criatividade</span><span>Decisão</span><span>Performance</span><span>Ciência</span><span>Propósito</span><span>Esporte</span><span>Comportamento</span><span>Futuro</span>
+      <span>Criatividade</span><span>Decisão</span><span>Performance</span><span>Ciência</span><span>Propósito</span><span>Esporte</span><span>Comportamento</span><span>Futuro</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MANIFESTO / SOBRE ===================== -->
+<section class="manifesto section-pad" id="sobre">
+  <div class="wrap manifesto-inner">
+    <span class="eyebrow reveal">O que é o Conexões</span>
+    <p class="reveal" data-delay="1" style="margin-top:1em">
+      Quase tudo que importa na vida aconteceu porque <span class="hl">alguém fez uma pergunta melhor.</span>
+      Este podcast não persegue celebridades — persegue <span class="hl">ideias</span>.
+      <span class="muted">Um atleta, um cientista, um artista, um empreendedor, alguém completamente desconhecido:</span>
+      o único critério é enxergar o mundo de um jeito que vale a pena escutar.
+    </p>
+    <div class="manifesto-sign reveal" data-delay="2">— Uma ideia por episódio, capaz de mudar como você vê tudo</div>
+  </div>
+</section>
+
+<!-- ===================== FERNANDA ===================== -->
+<section class="section-pad wrap" id="fernanda">
+  <div class="about-grid">
+    <figure class="about-photo reveal">
+      <img src="conexoes_capa.png" alt="Fernanda Filgueiras" />
+      <figcaption>Fernanda Filgueiras · Rio · Salvador · São Paulo</figcaption>
+    </figure>
+    <div class="about-body">
+      <span class="eyebrow reveal">Quem conduz as conversas</span>
+      <h2 class="reveal" data-delay="1">Vim do marketing e do esporte. Fiquei pela curiosidade.</h2>
+      <p class="reveal" data-delay="1">Passei anos liderando estratégias de marketing para grandes lançamentos, esportes e parcerias internacionais na <strong>Amazon Prime Video</strong>, e hoje lidero Marketing e Comunicação da <strong>CazéTV</strong>. Campanhas multimilionárias, grandes eventos, negociações globais.</p>
+      <p class="reveal" data-delay="2">Mas antes disso foram <strong>dezesseis anos como atleta de ginástica rítmica</strong> — onde aprendi que o brilho do palco só existe por causa do treino invisível. E, mais recentemente, momentos que mudaram minha forma de enxergar a vida e me ensinaram que sucesso profissional não responde todas as perguntas.</p>
+      <p class="reveal" data-delay="2">Sempre fui a pessoa que faz as perguntas profundas. Hoje me interessa muito mais <strong>entender pessoas</strong> do que construir campanhas. O Conexões nasce exatamente daí.</p>
+      <div class="about-cred reveal" data-delay="3">
+        <span>Amazon Prime Video</span><span>CazéTV</span><span>Ex-atleta olímpica</span><span>Marketing &amp; Comunicação</span>
+      </div>
+      <blockquote class="about-quote reveal" data-delay="3">“Leveza é o meu jeito de ser séria.”</blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== EPISÓDIOS ===================== -->
+<section class="section-pad wrap" id="episodios">
+  <div class="section-head reveal">
+    <span class="eyebrow">Episódios</span>
+    <h2>Conversas que deixam uma ideia grudada em você.</h2>
+    <p>Escolha um tema ou explore tudo. Cada episódio está disponível em vídeo e áudio, no seu player favorito.</p>
+  </div>
+
+  <div class="filters reveal" id="filters" role="tablist">
+    <button class="filter active" data-filter="all">Todos</button>
+    <button class="filter" data-filter="conexoes">Conexões</button>
+    <button class="filter" data-filter="esporte">Esporte</button>
+    <button class="filter" data-filter="cultura">Comportamento</button>
+    <button class="filter" data-filter="criatividade">Criatividade</button>
+    <button class="filter" data-filter="negocios">Negócios</button>
+  </div>
+
+  <div class="ep-grid" id="epGrid"><!-- injetado via JS --></div>
+
+  <div class="eps-more reveal">
+    <a href="#newsletter" class="btn btn-ghost">Ver todos os episódios</a>
+  </div>
+</section>
+
+<!-- ===================== TEMAS ===================== -->
+<section class="themes section-pad" id="temas">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Temas</span>
+      <h2>Territórios que a gente gosta de explorar.</h2>
+    </div>
+    <div class="themes-grid reveal" data-delay="1">
+      <div class="theme-cell"><span class="num">01</span><h3>Criatividade</h3><span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+      <div class="theme-cell"><span class="num">02</span><h3>Psicologia</h3><span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+      <div class="theme-cell"><span class="num">03</span><h3>Esporte</h3><span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+      <div class="theme-cell"><span class="num">04</span><h3>Negócios</h3><span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+      <div class="theme-cell"><span class="num">05</span><h3>Tecnologia</h3><span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+      <div class="theme-cell"><span class="num">06</span><h3>Ciência</h3><span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+      <div class="theme-cell"><span class="num">07</span><h3>Comunicação</h3><span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+      <div class="theme-cell"><span class="num">08</span><h3>Filosofia</h3><span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CONVIDADOS ===================== -->
+<section class="section-pad wrap" id="convidados">
+  <div class="section-head reveal">
+    <span class="eyebrow">Convidados</span>
+    <h2>Gente com algo real para ensinar.</h2>
+    <p>Pessoas de mundos diferentes, unidas por uma coisa só: um jeito interessante de enxergar. Abaixo, alguns dos perfis que dão vida às conversas.</p>
+  </div>
+  <div class="guest-grid">
+    <article class="guest-card reveal">
+      <div class="guest-av gv1"><span class="initials">A</span></div>
+      <h3>A Atleta</h3>
+      <div class="role">Alta performance</div>
+      <p>O que a disciplina do esporte ensina sobre decisão, fracasso e reinvenção fora das quadras.</p>
+      <span class="rel">3 episódios relacionados →</span>
+    </article>
+    <article class="guest-card reveal" data-delay="1">
+      <div class="guest-av gv2"><span class="initials">C</span></div>
+      <h3>O Cientista</h3>
+      <div class="role">Ciência &amp; comportamento</div>
+      <p>Como a curiosidade vira método e por que boas perguntas valem mais que respostas prontas.</p>
+      <span class="rel">2 episódios relacionados →</span>
+    </article>
+    <article class="guest-card reveal" data-delay="2">
+      <div class="guest-av gv3"><span class="initials">A</span></div>
+      <h3>A Artista</h3>
+      <div class="role">Criatividade</div>
+      <p>Onde nasce uma ideia e o que a criatividade tem a ver com coragem, rotina e vulnerabilidade.</p>
+      <span class="rel">4 episódios relacionados →</span>
+    </article>
+    <article class="guest-card reveal" data-delay="3">
+      <div class="guest-av gv4"><span class="initials">E</span></div>
+      <h3>O Empreendedor</h3>
+      <div class="role">Negócios &amp; futuro</div>
+      <p>Decisões difíceis, apostas contra a maré e o preço humano por trás de construir algo do zero.</p>
+      <span class="rel">3 episódios relacionados →</span>
+    </article>
+  </div>
+  <p class="guest-note reveal">Tem alguém que enxerga o mundo de um jeito diferente? <a href="#contato" style="color:var(--accent);font-weight:600">Sugira um convidado →</a></p>
+</section>
+
+<!-- ===================== FRASES ===================== -->
+<section class="quotes section-pad">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Frases que ficam</span>
+      <h2>Trechos para reler devagar.</h2>
+    </div>
+    <div class="quotes-grid">
+      <div class="quote-card big reveal">
+        <span class="mark">“</span>
+        <blockquote>Conexões não são acaso — são estratégia. Nenhum resultado nasce sozinho.</blockquote>
+        <cite>Fernanda Filgueiras · <b>EP.01 Conexões</b></cite>
+      </div>
+      <div class="quote-card reveal">
+        <span class="mark">“</span>
+        <blockquote>Performance começa na rotina, não na entrega. O brilho do palco é feito no invisível.</blockquote>
+        <cite>EP.04 · <b>Esporte &amp; Movimento</b></cite>
+      </div>
+      <div class="quote-card reveal" data-delay="1">
+        <span class="mark">“</span>
+        <blockquote>Trabalho é sobre gente antes de ser sobre meta.</blockquote>
+        <cite>EP.02 · <b>Liderança Relacional</b></cite>
+      </div>
+      <div class="quote-card reveal" data-delay="1">
+        <span class="mark">“</span>
+        <blockquote>Prefiro menos e melhor. Conversa real vale mais que métrica vazia.</blockquote>
+        <cite>EP.03 · <b>Multiculturalidade</b></cite>
+      </div>
+      <div class="quote-card reveal" data-delay="2">
+        <span class="mark">“</span>
+        <blockquote>Leveza não é fragilidade. É método.</blockquote>
+        <cite>Fernanda Filgueiras · <b>Manifesto</b></cite>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== NEWSLETTER ===================== -->
+<section class="section-pad wrap news" id="newsletter">
+  <div class="news-card reveal">
+    <div class="news-inner">
+      <span class="eyebrow">Newsletter</span>
+      <h2>Uma ideia por semana para fazer perguntas melhores.</h2>
+      <p>Sem ruído, sem clickbait. Só um pensamento que vale o seu tempo — bastidores dos episódios, uma pergunta para levar a semana e recomendações que ampliam o olhar.</p>
+      <form class="news-form" id="newsForm" novalidate>
+        <input type="email" id="newsEmail" placeholder="seu@email.com" aria-label="Seu e-mail" required />
+        <button type="submit" class="btn btn-accent">Quero receber</button>
+      </form>
+      <div class="news-note">Enviamos toda quinta. Cancele quando quiser, sem drama.</div>
+      <div class="news-ok" id="newsOk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 13 4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg> Pronto! Sua primeira ideia chega na próxima quinta.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PARCEIROS ===================== -->
+<section class="section-pad wrap" id="parceiros">
+  <div class="partners-grid">
+    <div class="partner-copy">
+      <span class="eyebrow reveal">Parceiros &amp; Patrocínio</span>
+      <h2 class="reveal" data-delay="1">Uma audiência que escuta até o fim.</h2>
+      <p class="reveal" data-delay="1">O Conexões conversa com um público curioso, exigente e engajado — pessoas que tomam decisões e valorizam profundidade. Uma marca aqui não interrompe: ela participa da conversa.</p>
+      <div class="partner-stats reveal" data-delay="2">
+        <div class="stat"><div class="n"><b>+40</b>min</div><div class="l">Tempo médio de escuta</div></div>
+        <div class="stat"><div class="n"><b>85</b>%</div><div class="l">Retenção por episódio</div></div>
+        <div class="stat"><div class="n">3<b>×</b></div><div class="l">Mês · vídeo &amp; áudio</div></div>
+      </div>
+      <a href="#contato" class="btn btn-primary reveal" data-delay="2">Receber o mídia kit</a>
+    </div>
+    <div class="tiers reveal" data-delay="1">
+      <div class="tier">
+        <div class="th"><h4>Apresentação</h4><span class="badge">Premium</span></div>
+        <p>“Conexões, apresentado por sua marca.” Presença de marca na abertura, encerramento e identidade visual da temporada.</p>
+      </div>
+      <div class="tier">
+        <div class="th"><h4>Episódio patrocinado</h4><span class="badge">Destaque</span></div>
+        <p>Leitura autoral integrada à conversa, no tom do programa — nada de comercial engessado. Inclui vídeo e áudio.</p>
+      </div>
+      <div class="tier">
+        <div class="th"><h4>Conteúdo &amp; branded</h4><span class="badge">Sob medida</span></div>
+        <p>Séries especiais, coberturas de eventos e projetos editoriais desenhados junto com o seu time de marketing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CONTATO ===================== -->
+<section class="contact section-pad" id="contato">
+  <div class="wrap contact-grid">
+    <div class="reveal">
+      <span class="eyebrow">Contato &amp; Imprensa</span>
+      <h2>Vamos conversar.</h2>
+      <p>Sugestão de convidado, proposta de parceria, pauta de imprensa ou só uma boa pergunta? A porta está aberta.</p>
+    </div>
+    <div class="contact-list reveal" data-delay="1">
+      <a href="mailto:contato@conexoes.com.br">
+        <span class="lab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3 7 9 6 9-6"/></svg> Parcerias &amp; geral</span>
+        <span class="val">contato@conexoes.com.br →</span>
+      </a>
+      <a href="mailto:imprensa@conexoes.com.br">
+        <span class="lab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h11v14H6a2 2 0 0 1-2-2V5Z"/><path d="M15 8h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2M8 9h4M8 13h4"/></svg> Imprensa</span>
+        <span class="val">imprensa@conexoes.com.br →</span>
+      </a>
+      <a href="#convidados">
+        <span class="lab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0M17 6l2 2 3-3.5"/></svg> Sugerir convidado</span>
+        <span class="val">Enviar sugestão →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#top" class="brand"><span class="mark">C</span><span>Conexões<small>Fernanda Filgueiras</small></span></a>
+        <p>Conversas profundas, leves e humanas com quem enxerga o mundo de um jeito interessante. Porque as melhores respostas começam com uma boa pergunta.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 12s0-3.7-.5-5.5a2.8 2.8 0 0 0-2-2C18.7 4 12 4 12 4s-6.7 0-8.5.5a2.8 2.8 0 0 0-2 2C1 8.3 1 12 1 12s0 3.7.5 5.5a2.8 2.8 0 0 0 2 2C5.3 20 12 20 12 20s6.7 0 8.5-.5a2.8 2.8 0 0 0 2-2C23 15.7 23 12 23 12zM10 15.5v-7l6 3.5z"/></svg></a>
+          <a href="#" aria-label="Spotify"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.6 14.5c-.2.3-.6.4-.9.2-2.5-1.5-5.6-1.9-9.3-1-.4.1-.7-.1-.8-.5-.1-.4.1-.7.5-.8 4-.9 7.5-.5 10.3 1.2.3.2.4.6.2.9zm1.3-3c-.3.4-.7.5-1.1.3-2.8-1.7-7.1-2.2-10.5-1.2-.4.1-.9-.1-1-.6-.1-.4.1-.9.6-1 3.8-1.1 8.6-.6 11.8 1.4.4.2.5.7.2 1.1zm.1-3.1C14.5 8.5 8.9 8.3 5.5 9.3c-.5.2-1.1-.1-1.3-.6-.2-.5.1-1.1.6-1.3C8.7 6.2 15 6.4 19 8.8c.5.3.6.9.4 1.4-.3.4-.9.6-1.3.2z"/></svg></a>
+          <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 3.5a2 2 0 1 0 0 4 2 2 0 0 0 0-4zM3 9h3v12H3zM9 9h2.9v1.6h.04c.4-.75 1.4-1.6 2.9-1.6 3.1 0 3.7 2 3.7 4.7V21h-3v-5.5c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9V21H9z"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Explorar</h5>
+        <a href="#sobre">O projeto</a>
+        <a href="#fernanda">Fernanda</a>
+        <a href="#episodios">Episódios</a>
+        <a href="#temas">Temas</a>
+        <a href="#convidados">Convidados</a>
+      </div>
+      <div class="footer-col">
+        <h5>Ouvir em</h5>
+        <a href="#">Spotify</a>
+        <a href="#">YouTube</a>
+        <a href="#">Apple Podcasts</a>
+        <a href="#newsletter">Newsletter</a>
+        <a href="#parceiros">Seja parceiro</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span id="year"></span> Conexões · Fernanda Filgueiras. Todos os direitos reservados.</span>
+      <span class="made">Puro suco de Brasil.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ===================== MODAL ===================== -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-panel">
+    <button class="modal-close" data-close aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18" stroke-linecap="round"/></svg></button>
+    <span class="eyebrow" id="modalEyebrow">Episódio</span>
+    <h3 id="modalTitle">—</h3>
+    <div class="m-meta" id="modalMeta"></div>
+    <p class="desc" id="modalDesc"></p>
+    <div class="player" id="modalPlayer">
+      <div class="ph">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        <div>Player do episódio</div>
+        <small>Conecte o embed do Spotify ou YouTube aqui</small>
+      </div>
+    </div>
+    <div class="modal-links">
+      <a href="#" class="plat-btn"><svg viewBox="0 0 24 24" fill="#1DB954"><circle cx="12" cy="12" r="11"/></svg> Spotify</a>
+      <a href="#" class="plat-btn"><svg viewBox="0 0 24 24" fill="#FF0000"><rect width="24" height="24" rx="6"/></svg> YouTube</a>
+      <a href="#" class="plat-btn"><svg viewBox="0 0 24 24" fill="#9933CC"><circle cx="12" cy="12" r="11"/></svg> Apple Podcasts</a>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DADOS DOS EPISÓDIOS
+   Edite este array para adicionar/atualizar episódios.
+   'embed' aceita uma URL de iframe (Spotify/YouTube) — deixe
+   vazio para exibir o placeholder.
+   ============================================================ */
+const EPISODES = [
+  { n:'01', cat:'conexoes', tag:'Conexões', img:'conexoes_capa.png',
+    title:'Conexões são tudo', dur:'52 min', date:'Ep. 01',
+    guest:{name:'Episódio de estreia', role:'Manifesto', ini:'C'},
+    desc:'Por que nenhum resultado nasce sozinho — e como as pessoas certas mudam a rota de uma vida inteira.',
+    embed:'' },
+  { n:'02', cat:'cultura', tag:'Comportamento', img:'multiculturalidade_capa.png',
+    title:'Multiculturalidade', dur:'47 min', date:'Ep. 02',
+    guest:{name:'A Conectora', role:'Culturas', ini:'M'},
+    desc:'Rio, Salvador e São Paulo em uma pessoa só. O que a mistura ensina sobre criatividade e pertencimento.',
+    embed:'' },
+  { n:'03', cat:'esporte', tag:'Esporte', img:'esporte_capa.png',
+    title:'Esporte & Movimento', dur:'58 min', date:'Ep. 03',
+    guest:{name:'A Atleta', role:'Performance', ini:'E'},
+    desc:'Dezesseis anos de disciplina viram método. O que o corpo ensina sobre foco, fracasso e recomeço.',
+    embed:'' },
+  { n:'04', cat:'criatividade', tag:'Criatividade', img:'', grad:'g1', q:'De onde vem uma ideia?',
+    title:'De onde vem uma ideia', dur:'44 min', date:'Ep. 04',
+    guest:{name:'O Artista', role:'Criatividade', ini:'A'},
+    desc:'Criatividade tem menos a ver com talento e mais com coragem, rotina e vulnerabilidade. Uma conversa sobre o processo.',
+    embed:'' },
+  { n:'05', cat:'negocios', tag:'Negócios', img:'', grad:'g2', q:'A decisão mais difícil',
+    title:'A decisão mais difícil', dur:'61 min', date:'Ep. 05',
+    guest:{name:'O Empreendedor', role:'Negócios', ini:'E'},
+    desc:'Apostar contra a maré tem um preço humano. Bastidores das escolhas que definem uma carreira — e uma pessoa.',
+    embed:'' },
+  { n:'06', cat:'criatividade', tag:'Ciência', img:'', grad:'g3', q:'A ciência da curiosidade',
+    title:'A ciência da curiosidade', dur:'49 min', date:'Ep. 06',
+    guest:{name:'O Cientista', role:'Ciência', ini:'C'},
+    desc:'O que acontece no cérebro quando fazemos uma boa pergunta — e por que a curiosidade é a habilidade mais subestimada.',
+    embed:'' },
+];
+
+/* ---------- Render episódios ---------- */
+const grid = document.getElementById('epGrid');
+function epCard(ep, i){
+  const thumb = ep.img
+    ? `<div class="ep-thumb"><img src="${ep.img}" alt="Capa do episódio ${ep.title}" loading="lazy" /><span class="ep-tagpill">${ep.tag}</span><div class="ep-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div></div>`
+    : `<div class="ep-thumb gradient ${ep.grad}"><span class="qmark">${ep.q}</span><span class="ep-tagpill">${ep.tag}</span><div class="ep-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div></div>`;
+  return `<article class="ep-card reveal" data-cat="${ep.cat}" data-ep="${i}" data-delay="${i%3}" tabindex="0" role="button" aria-label="Abrir episódio ${ep.title}">
+    ${thumb}
+    <div class="ep-info">
+      <div class="ep-meta"><span>${ep.date}</span><span>·</span><span>${ep.dur}</span></div>
+      <h3>${ep.title}</h3>
+      <p>${ep.desc}</p>
+      <div class="ep-guest"><span class="av">${ep.guest.ini}</span><div><b>${ep.guest.name}</b> · <small>${ep.guest.role}</small></div></div>
+    </div>
+  </article>`;
+}
+grid.innerHTML = EPISODES.map(epCard).join('');
+
+/* ---------- Filtros ---------- */
+const filters = document.querySelectorAll('.filter');
+filters.forEach(f => f.addEventListener('click', () => {
+  filters.forEach(x => x.classList.remove('active'));
+  f.classList.add('active');
+  const val = f.dataset.filter;
+  document.querySelectorAll('.ep-card').forEach(c => {
+    const show = val === 'all' || c.dataset.cat === val;
+    c.style.display = show ? '' : 'none';
+    if(show){ c.classList.remove('in'); requestAnimationFrame(()=>io.observe(c)); }
+  });
+}));
+
+/* ---------- Modal ---------- */
+const modal = document.getElementById('modal');
+let lastFocused = null;
+function openEp(i){
+  const ep = EPISODES[i]; if(!ep) return;
+  lastFocused = document.activeElement;
+  document.getElementById('modalEyebrow').textContent = `${ep.date} · ${ep.tag}`;
+  document.getElementById('modalTitle').textContent = ep.title;
+  document.getElementById('modalMeta').innerHTML = `<span>${ep.dur}</span><span>·</span><span>${ep.guest.name}</span>`;
+  document.getElementById('modalDesc').textContent = ep.desc;
+  const player = document.getElementById('modalPlayer');
+  player.innerHTML = ep.embed
+    ? `<iframe src="${ep.embed}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen loading="lazy" title="Player ${ep.title}"></iframe>`
+    : `<div class="ph"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg><div>Player do episódio “${ep.title}”</div><small>Cole aqui o embed do Spotify ou YouTube (campo <code>embed</code>)</small></div>`;
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  modal.querySelector('.modal-close').focus();
+}
+function closeModal(){
+  modal.classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('modalPlayer').innerHTML = '';
+  if(lastFocused) lastFocused.focus();
+}
+document.addEventListener('click', e => {
+  const card = e.target.closest('[data-ep]');
+  if(card){ openEp(+card.dataset.ep); return; }
+  const opener = e.target.closest('[data-open-ep]');
+  if(opener){ openEp(+opener.dataset.openEp); return; }
+  if(e.target.closest('[data-close]')) closeModal();
+});
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+  if(e.key === 'Enter'){ const c = e.target.closest('[data-ep]'); if(c) openEp(+c.dataset.ep); }
+});
+
+/* ---------- Tema claro/escuro ---------- */
+const root = document.documentElement;
+const saved = localStorage.getItem('conexoes-theme');
+if(saved) root.setAttribute('data-theme', saved);
+document.getElementById('themeToggle').addEventListener('click', () => {
+  const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', next);
+  localStorage.setItem('conexoes-theme', next);
+});
+
+/* ---------- Nav scroll + progress ---------- */
+const nav = document.getElementById('nav');
+const progress = document.getElementById('progress');
+function onScroll(){
+  nav.classList.toggle('scrolled', window.scrollY > 24);
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  progress.style.width = (window.scrollY / h * 100) + '%';
+}
+window.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+/* ---------- Menu mobile ---------- */
+const menuBtn = document.getElementById('menuBtn');
+const mobileMenu = document.getElementById('mobileMenu');
+menuBtn.addEventListener('click', () => {
+  const open = mobileMenu.classList.toggle('open');
+  menuBtn.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
+  document.body.style.overflow = open ? 'hidden' : '';
+});
+mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  mobileMenu.classList.remove('open'); document.body.style.overflow = '';
+}));
+
+/* ---------- Reveal on scroll ---------- */
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(en => { if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+}, {threshold:0.12, rootMargin:'0px 0px -8% 0px'});
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+/* ---------- Newsletter ---------- */
+document.getElementById('newsForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const email = document.getElementById('newsEmail');
+  if(!email.value || !email.checkValidity()){ email.focus(); email.style.borderColor = 'var(--orange)'; return; }
+  document.getElementById('newsForm').style.display = 'none';
+  document.querySelector('.news-note').style.display = 'none';
+  document.getElementById('newsOk').classList.add('show');
+});
+
+/* ---------- Ano ---------- */
+document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
